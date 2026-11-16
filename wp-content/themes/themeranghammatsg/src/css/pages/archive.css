@@ -1,0 +1,25 @@
+/*
+ * archive.css — trang danh sách: Tin tức, danh mục/thẻ, kết quả tìm kiếm.
+ */
+@import "../_tailwind.css";
+@import "../components/_pagination.css";
+
+/* Utility chỉ áp dụng trong .site-main (vùng <main>). */
+@layer utilities {
+	.site-main {
+		@tailwind utilities source(none);
+	}
+}
+
+@source "../../../index.php";
+@source "../../../archive.php";
+@source "../../../category.php";
+@source "../../../archive-bac-si.php";
+@source "../../../template-parts/components/featured-grid.php";
+@source "../../../search.php";
+@source "../../../template-parts/content/";
+@source "../../../template-parts/components/page-title.php";
+@source "../../../template-parts/components/category-filter.php";
+@source "../../../inc/template-tags.php";
+@source "../../../searchform.php";
+@source "../../../inc/icons.php";

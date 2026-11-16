@@ -1,0 +1,56 @@
+/*
+ * page-home.css — chỉ Trang chủ (front-page.php).
+ * Thêm @source khi tạo section mới trong template-parts/sections/.
+ */
+@import "../_tailwind.css";
+/* CSS lõi Swiper (hero banner), đặt vào layer components để utility vẫn ghi đè được. */
+@import "swiper/css" layer(components);
+@import "../components/_entry-content.css";
+@import "../components/_carousel.css";
+@import "../components/_home-doctors.css";
+
+/* Utility chỉ áp dụng trong .site-main (vùng <main>). */
+@layer utilities {
+	.site-main {
+		@tailwind utilities source(none);
+	}
+}
+
+@source "../../../front-page.php";
+@source "../../../template-parts/sections/";
+@source "../../../inc/hero.php";
+@source "../../../inc/news.php";
+@source "../../../inc/home-doctors.php";
+@source "../../../inc/home-branches.php";
+@source "../../../inc/home-before-after.php";
+
+@layer components {
+	/* Chiều cao tự động để flex kéo đều các thẻ, giữ nguyên trước/sau khi Swiper khởi tạo. */
+	.home-branches .swiper-slide {
+		height: auto;
+		display: flex;
+	}
+}
+
+@layer components {
+	/* Chấm phân trang hero (Swiper Pagination tự sinh span .swiper-pagination-bullet).
+	 * Mỗi bullet là ô bấm cố định 28×24px (PageSpeed target-size ≥ 24×24) và KHÔNG đổi kích thước khi đổi slide
+	 * → các bullet không xê dịch khi autoplay (không phát sinh layout shift). Phần nhìn thấy (chấm 10px / viên 28px khi đang chọn)
+	 * là ::before định vị tuyệt đối giữa ô: đổi độ rộng của nó không đẩy phần tử nào khác. */
+	.hero-pagination .swiper-pagination-bullet {
+		@apply relative h-6 w-7 cursor-pointer;
+	}
+
+	.hero-pagination .swiper-pagination-bullet::before {
+		@apply absolute top-1/2 left-1/2 h-2.5 w-2.5 -translate-1/2 rounded-full bg-white/70 shadow-[0_0_0_1px_rgb(16_33_45/0.15)] transition-[width,background-color] duration-300 content-[''];
+	}
+
+	.hero-pagination .swiper-pagination-bullet-active::before {
+		@apply w-7 bg-primary;
+	}
+
+	/* Iframe YouTube / <video> do src/js/embed.js tạo khi bấm ▶ (section Giới thiệu). */
+	.embed-player {
+		@apply absolute inset-0 size-full border-0 bg-black;
+	}
+}

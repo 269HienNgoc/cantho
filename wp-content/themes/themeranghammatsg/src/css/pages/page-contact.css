@@ -1,0 +1,31 @@
+/*
+ * page-contact.css — chỉ trang dùng template "Liên hệ – Đặt lịch" (page-templates/tpl-lien-he.php, kèm form Fluent Forms).
+ */
+@import "../_tailwind.css";
+@import "../components/_entry-content.css";
+
+/* Utility chỉ áp dụng trong .site-main (vùng <main>). */
+@layer utilities {
+	.site-main {
+		@tailwind utilities source(none);
+	}
+}
+
+@source "../../../page-templates/tpl-lien-he.php";
+@source "../../../inc/template-tags.php";
+
+@layer components {
+	/* Nền ô bản đồ trước khi tải (lưới mờ gợi hình bản đồ). */
+	.map-facade {
+		@apply bg-soft;
+		background-image:
+			linear-gradient(var(--color-mint-dark) 1px, transparent 1px),
+			linear-gradient(90deg, var(--color-mint-dark) 1px, transparent 1px);
+		background-size: 40px 40px;
+	}
+
+	/* Iframe bản đồ do src/js/embed.js tạo khi bấm. */
+	.embed-player {
+		@apply absolute inset-0 size-full border-0;
+	}
+}

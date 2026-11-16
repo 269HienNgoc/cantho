@@ -1,0 +1,41 @@
+/*
+ * Design tokens dùng chung — được @import vào MỌI file trong pages/.
+ * Tailwind chỉ xuất biến CSS nào thực sự được dùng trong từng file, nên import nhiều lần không làm phình CSS.
+ *
+ * Dùng trong markup: bg-primary, text-dark, font-sans, max-w-site, xs:…
+ */
+@theme {
+	/* Font duy nhất của site: Roboto (tự host, subset latin + vietnamese). */
+	--font-*: initial;
+	--font-sans: "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+	/* Màu thương hiệu (lấy từ thiết kế header). */
+	--color-primary: #0b7a55;        /* nút Đặt lịch, link */
+	--color-primary-dark: #075c40;
+	--color-primary-light: #11a06c;
+	--color-green: #13b54b;          /* nút tìm kiếm */
+	--color-green-dark: #0f9a3f;
+	--color-icon: #12a14a;           /* icon menu */
+	--color-dark: #10212d;           /* chữ menu, hotline */
+	--color-teal: #1d5c5a;           /* icon Trang chủ */
+	--color-teal-dark: #10665c;      /* thanh lọc chuyên mục: nút đang chọn, chữ */
+	--color-mint: #ecf7f3;           /* thanh lọc chuyên mục: nền nút */
+	--color-mint-dark: #dcefe8;      /* thanh lọc chuyên mục: nền nút khi rê chuột */
+	--color-body: #1f2d36;           /* chữ nội dung */
+	--color-muted: #696b73;          /* ≥ 4,85:1 trên trắng / soft / mint (PageSpeed color-contrast) */
+	--color-line: #e3e8ee;
+	--color-soft: #f0fafa;           /* nền thanh menu */
+	--color-deep: #003442;           /* xanh đậm thương hiệu: H1 bài viết (tương phản 12:1 trên nền mint) */
+	--color-footer: var(--color-deep); /* nền chân trang */
+	--color-footer-accent: #d3d867;  /* chân trang: tiêu đề cột, icon chi nhánh */
+	--color-footer-text: #c5dbe2;    /* chân trang: chữ */
+	--color-footer-muted: #a3bdc8;   /* chân trang: dòng bản quyền */
+
+	/* Khung nội dung: max-w-site */
+	--container-site: 90rem;         /* 1440px */
+
+	/* Breakpoint bổ sung: xs = 560px (mặc định: sm 640, md 768, lg 1024, xl 1280, 2xl 1536) */
+	--breakpoint-xs: 35rem;
+
+	--shadow-card: 0 6px 24px rgb(16 42 67 / 0.08);
+}

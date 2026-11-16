@@ -1,0 +1,57 @@
+# Hồ sơ bác sĩ
+
+Trong quản trị, chọn **Bác sĩ → Thêm bác sĩ**. Danh sách công khai ở `/bac-si/`, hồ sơ ở `/bac-si/<slug>/`. CPT nằm trong theme và không có taxonomy riêng.
+
+- **Tiêu đề:** tên bác sĩ, dùng làm H1.
+- **Nội dung:** phần giới thiệu, soạn bằng Classic Editor.
+- **Tóm tắt:** mô tả ngắn trên trang danh sách.
+- **Ảnh đại diện:** chân dung, dùng lại ở đầu phần chứng chỉ và card bác sĩ khác. Nên dùng ảnh dọc tỷ lệ 4:5.
+
+Nhóm **Thông tin hồ sơ bác sĩ** của ACF PRO có các tab:
+
+1. **Banner & giới thiệu:** banner desktop 2048×768, mobile 828×1000, chức danh và ảnh hoạt động chuyên môn. Không có banner desktop thì bỏ section banner và ưu tiên tải chân dung đầu trang. Thiếu ảnh mobile thì dùng ảnh desktop.
+2. **Chuyên môn & văn bằng:** mỗi dòng trong Chuyên môn/Học vấn/Kinh nghiệm là một mục. Thư viện văn bằng đào tạo nằm sau ba danh sách.
+3. **Chứng chỉ & thành tựu:** thư viện riêng, không trộn với văn bằng.
+4. **Video về bác sĩ:** tối đa hai video, mỗi video cần URL YouTube, tiêu đề và ảnh bìa trong thư viện media.
+5. **Ca điều trị:** danh sách ca và tối đa hai video ca điều trị. Mỗi ca cần tên khách hàng và đủ ba ảnh; địa phương, phương án và loại điều trị có thể bỏ trống. Kéo thả để đổi thứ tự các mục.
+
+## Section "Đội ngũ bác sĩ" trên trang chủ
+
+Slider nằm trên section Tin tức, mỗi slide 1 bác sĩ. Nhập trong hồ sơ bác sĩ, tab **Trang chủ**:
+
+- Không cần bật gì: **mọi hồ sơ đã xuất bản có Ảnh đại diện** đều hiện ở slider (tối đa 8, theo Chuyên khoa nếu đã chọn trong Tùy biến). Ô "Hiện ở section Đội ngũ bác sĩ" cũ đã bỏ.
+- **Học hàm / học vị**: dòng nhỏ trên tên, vd "Bác sĩ CKI".
+- **Kinh nghiệm lâm sàng** và **Hồ sơ điều trị**: hiện thành 2 ô số liệu, vd "15+ năm", "6.000+ ca".
+- **Chứng chỉ chuyên môn**: mỗi dòng 1 mục, hiện tối đa 5 dòng. Để trống thì lấy danh sách Học vấn.
+
+Dòng "Chức vụ" lấy từ ô **Chức danh** (tab Banner & giới thiệu); tên là tiêu đề hồ sơ; ảnh là **Ảnh đại diện** (bắt buộc, hồ sơ không có ảnh sẽ không hiện). Thứ tự: ô **Thứ tự** trong khung **Thuộc tính** bên phải (số nhỏ đứng trước). Tiêu đề section và link "Xem tất cả bác sĩ": **Giao diện → Tùy biến → Đội ngũ bác sĩ (Trang chủ)**.
+
+### Lọc theo chuyên khoa + slider thứ 2
+
+- Tạo chuyên khoa ở **Bác sĩ → Chuyên khoa**, rồi tick chuyên khoa trong từng hồ sơ.
+- **Tùy biến → Đội ngũ bác sĩ (Trang chủ)** → ô **Chuyên khoa**: để "Tất cả chuyên khoa" thì hiện như cũ; chọn 1 chuyên khoa thì chỉ hiện bác sĩ thuộc chuyên khoa đó (kể cả chuyên khoa con).
+- **Tùy biến → Đội ngũ bác sĩ 2 (Trang chủ)**: slider thứ 2, ngay dưới slider đầu, cùng giao diện, chữ (tiêu đề, link) nhập riêng. **Chỉ hiện khi đã chọn Chuyên khoa.** Mỗi slider tối đa 8 bác sĩ; 1 bác sĩ có thể nằm ở cả 2 slider.
+
+## Box bác sĩ trong bài viết
+
+Trong tab **Banner & giới thiệu** có 2 ô dùng cho box giới thiệu bác sĩ ở bài viết:
+
+- **Nhãn box bài viết:** dòng trên tên, vd "Cố vấn và đào tạo chuyên môn:". Để trống thì dùng "Tham vấn chuyên môn:".
+- **Điểm nổi bật (box bài viết):** mỗi dòng 1 ý ngắn (nên ≤ 60 ký tự), hiện tối đa 4 dòng có dấu tích. Để trống thì tự lấy chức danh + dòng đầu Học vấn + dòng đầu Kinh nghiệm.
+
+Ở bài viết: chọn **Bác sĩ tham vấn chuyên môn** (nhóm "Thông tin chuyên môn bài viết"), rồi gõ `[bac_si_tham_van]` vào nội dung ở vị trí muốn hiện box. Có thể chèn nhiều chỗ.
+
+- `[bac_si_tham_van id="526"]`: hiện bác sĩ khác. ID xem ở URL khi sửa hồ sơ.
+- `[bac_si_tham_van label="Bác sĩ điều trị:"]`: ghi đè nhãn cho riêng chỗ đó.
+
+Bài chưa chọn bác sĩ tham vấn và không có `id` thì shortcode không hiện gì. Shortcode chỉ hoạt động trong bài viết, không dùng ở trang.
+
+Ảnh trong thư viện có thể kéo thả để sắp xếp. Dùng ảnh đủ độ phân giải; alt lấy từ Media, fallback về tiêu đề ảnh. Section/dòng thiếu dữ liệu hợp lệ được bỏ qua. Slider không tự chạy; video chỉ kết nối YouTube sau khi bấm phát.
+
+Form sau nhóm ca điều trị lấy ID ở **Giao diện → Tùy biến → Thông tin phòng khám**, hiện là 3. Các nút đặt lịch dùng helper của theme trên hồ sơ dẫn về `#dat-lich`. Form dùng chung kiểu hiển thị và cơ chế chạm mới tải với trang Liên hệ.
+
+Cuối hồ sơ tự lấy tối đa sáu bác sĩ đã xuất bản khác và ba bài viết mới nhất. Danh sách bác sĩ dùng chung component `template-parts/components/featured-grid.php` với danh mục: trang đầu 1 mục nổi bật + 12 card, trang sau 12 card; không có bộ lọc chuyên mục.
+
+Mã chính: `inc/doctors.php`, `inc/doctor-fields.php`, `single-bac-si.php`, `archive-bac-si.php`, `template-parts/doctor/`, `src/css/pages/single-doctor.css`. Form dùng partial `src/css/components/_booking-form.css`. Rewrite được cập nhật một lần theo option `rhm_doctor_rewrite_version`; không cần lưu permalink mỗi lần sửa hồ sơ.
+
+Sau khi sửa nguồn, chạy `npm run build`. Nếu đang chạy `npm run dev`, cần khởi động lại watcher khi thêm entry mới vì danh sách entry được lấy lúc Vite khởi động. Không sửa trực tiếp `dist/`.

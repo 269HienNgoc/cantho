@@ -1,0 +1,41 @@
+<?php
+/**
+ * Landing – Ô thông tin (dạng ô, xếp cạnh ô khác theo Độ rộng): tiêu đề vạch dọc, ảnh 40% trái + chữ + nút phải (< 640px: ảnh trên, chữ dưới).
+ * Field: inc/landing/layouts/feature.php. Thiếu tiêu đề hoặc (ảnh lẫn chữ) → không hiện.
+ *
+ * @package themeranghammatsg
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+$rhm_data  = $args['data'] ?? array();
+$rhm_title = rhm_landing_text( $rhm_data, 'title' );
+$rhm_image = rhm_landing_image( $rhm_data, 'image' );
+$rhm_lines = rhm_landing_rich( $rhm_data, 'text' );
+if ( '' === $rhm_title || ( ! $rhm_image && ! $rhm_lines ) ) {
+	return;
+}
+
+$rhm_head_id = $args['id'] . '-title';
+?>
+<section id="<?php echo esc_attr( $args['id'] ); ?>" class="h-full rounded-lg border border-line bg-white/80 p-5 shadow-card lg:p-6" aria-labelledby="<?php echo esc_attr( $rhm_head_id ); ?>">
+	<?php rhm_landing_heading( $rhm_head_id, $rhm_title, '', '', 'box', rhm_landing_color( $rhm_data, 'title_color' ) ); ?>
+	<div class="<?php echo esc_attr( $rhm_image ? 'grid items-center gap-4 sm:grid-cols-[40%_minmax(0,1fr)] lg:gap-6' : '' ); ?>">
+		<?php if ( $rhm_image ) : ?>
+			<div class="overflow-hidden rounded-md bg-soft">
+				<?php
+				// < 640px xếp dọc: ảnh rộng hết ô = màn hình − lề khung 32 − đệm ô 40 − viền 2 = 100vw − 74px.
+				// ≥ 640px: ảnh 40% phần nội dung ô (trừ phần khoảng cách 16/24px chia đôi).
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rhm_html_attrs escape từng thuộc tính.
+				echo rhm_landing_picture( $rhm_image, '(max-width: 639px) calc(100vw - 74px), ' . rhm_landing_box_sizes( $args['span'] ?? 10, 0.4, 0.4, 8 ), 'block h-auto w-full', (bool) $args['is_first'] );
+				?>
+			</div>
+		<?php endif; ?>
+		<div class="min-w-0">
+			<?php if ( '' !== $rhm_lines ) : ?>
+				<div class="rhm-rich mb-3 text-sm leading-relaxed text-body/85 lg:text-[15px]"><?php echo $rhm_lines; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rhm_landing_rich(). ?></div>
+			<?php endif; ?>
+			<?php rhm_landing_button( $rhm_data, 'btn btn-primary mt-2 h-10 gap-2 rounded-full px-5 text-sm font-bold' ); ?>
+		</div>
+	</div>
+</section>

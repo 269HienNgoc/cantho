@@ -1,0 +1,74 @@
+/*
+ * single-post.css — chi tiết bài viết (single.php).
+ */
+@import "../_tailwind.css";
+@import "../components/_entry-content.css";
+@import "../components/_toc.css";
+@import "../components/_doctor-box.css";
+
+/* Utility chỉ áp dụng trong .site-main (vùng <main>). */
+@layer utilities {
+	.site-main {
+		@tailwind utilities source(none);
+	}
+}
+
+@source "../../../single.php";
+@source "../../../template-parts/sections/booking-cta.php";
+@source "../../../template-parts/components/page-banner.php";
+@source "../../../template-parts/components/post-faq.php";
+@source "../../../template-parts/components/post-references.php";
+@source "../../../template-parts/components/doctor-box.php";
+@source "../../../inc/template-tags.php";
+
+@layer components {
+	/*
+	 * Nền banner bài viết (template-parts/components/page-banner.php), thuần CSS (không ảnh):
+	 * mint → trắng + vầng sáng xanh góc trên phải | ::before lưới chấm mờ dần từ góc phải.
+	 */
+	.post-banner {
+		@apply bg-white;
+		background-image:
+			radial-gradient(ellipse 60% 90% at 100% 0%, rgb(17 160 108 / 0.12), transparent 70%),
+			linear-gradient(to bottom, var(--color-mint), var(--color-white));
+	}
+
+	.post-banner::before {
+		@apply pointer-events-none absolute inset-0 content-[''];
+		background-image: radial-gradient(var(--color-mint-dark) 1.2px, transparent 1.4px);
+		background-size: 20px 20px;
+		mask-image: linear-gradient(to left, #000, transparent 65%);
+	}
+
+	/* Cỡ chữ nội dung bài viết (độc giả 30+): 18px mọi màn hình, dòng 1.75 — tiêu đề / bảng tự lớn theo (em). */
+	.entry-content {
+		--entry-font-size: 1.125rem;
+		--entry-line-height: 1.75;
+	}
+
+	/* Bài trước / bài sau (the_post_navigation). */
+	.post-navigation .nav-links {
+		@apply mt-12 flex justify-between gap-6 border-t border-line pt-6;
+	}
+
+	.post-navigation .nav-next {
+		@apply ml-auto text-right;
+	}
+
+	.post-navigation a {
+		@apply text-sm text-muted hover:text-primary;
+	}
+
+	.post-navigation a span {
+		@apply text-base font-semibold text-dark;
+	}
+}
+
+/*
+ * Sao đánh giá (plugin kk-star-ratings) trong banner bài viết: ẩn chữ "4.5/5 - (n bình chọn)" / "Rate this post" của plugin
+ * (người dùng yêu cầu — chỉ hiện ngôi sao, cạnh "Cập nhật"). CSS plugin không nằm trong @layer → ghi đè NGOÀI layer.
+ * Ẩn bằng CSS (không gỡ khỏi HTML) vì JS plugin in lại cả khối sau khi bấm sao. Cỡ sao giữ theo RHM_STAR_RATING_ATTS.
+ */
+.post-banner .kk-star-ratings .kksr-legend {
+	display: none;
+}

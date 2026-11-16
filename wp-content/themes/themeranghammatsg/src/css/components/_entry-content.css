@@ -1,0 +1,215 @@
+/*
+ * Nội dung soạn trong Classic Editor (the_content). Chỉ import vào entry của trang có nội dung bài/trang.
+ * Chống tràn ngang trên mobile: chữ/link dài tự xuống dòng, bảng và code cuộn ngang trong khối của nó,
+ * ảnh / iframe / video / chú thích ảnh (Classic Editor gắn width cố định) không vượt khung.
+ */
+@layer components {
+	/*
+	 * Cỡ chữ nội dung lấy từ biến (mặc định 16px / dòng 1.625) — bundle từng trang tự đặt, vd single-post.css 17/18px
+	 * cho bài viết (độc giả 30+). Tiêu đề, bảng tính cỡ theo em → tự lớn theo, tỉ lệ khớp cỡ cũ khi nội dung 16px.
+	 */
+	.entry-content {
+		font-size: var(--entry-font-size, 1rem);
+		line-height: var(--entry-line-height, 1.625);
+		@apply text-body wrap-break-word;
+	}
+
+	.entry-content > * + * {
+		@apply mt-4;
+	}
+
+	/*
+	 * Tiêu đề trong nội dung: mỗi cấp có dấu hiệu riêng để nhìn là biết thứ bậc.
+	 * H2 vạch dọc gradient (dài theo số dòng) | H3 chấm tròn viền | H4 gạch chân ngắn | H5 nhãn in hoa | H6 ghi chú nhỏ.
+	 * Khoảng cách trên giảm dần theo cấp (H2 28/32px → H3 24 → H4–H6 20px); tiêu đề → phần tử kế tiếp 12px (sát hơn
+	 * khoảng cách giữa 2 đoạn 16px để tiêu đề gắn với nội dung của nó).
+	 */
+	.entry-content :is(h2, h3, h4, h5, h6) {
+		@apply leading-snug font-bold text-pretty;
+	}
+
+	.entry-content h2 {
+		@apply relative mt-7 pl-4 text-[1.375em] text-teal-dark lg:mt-8 lg:pl-5 lg:text-[1.75em];
+	}
+
+	.entry-content h2::before {
+		@apply absolute inset-y-[0.15em] left-0 w-1.5 rounded-full bg-linear-to-b from-primary-light to-teal-dark content-[''];
+	}
+
+	.entry-content h3 {
+		@apply relative mt-6 pl-6 text-[1.125em] text-primary lg:pl-7 lg:text-[1.375em];
+	}
+
+	/* Chấm tròn căn giữa dòng đầu: nửa chiều cao dòng (1.375em / 2) trừ nửa kích thước chấm. */
+	.entry-content h3::before {
+		@apply absolute top-[calc(0.6875em-0.375rem)] left-0 size-3 rounded-full border-[3px] border-primary bg-white content-[''] lg:top-[calc(0.6875em-0.4375rem)] lg:size-3.5;
+	}
+
+	.entry-content h4 {
+		@apply mt-5 w-fit border-b-2 border-mint-dark pb-1 text-[1em] text-teal-dark lg:text-[1.125em];
+	}
+
+	.entry-content h5 {
+		@apply mt-5 text-[0.8125em] tracking-wider text-primary uppercase lg:text-[0.875em];
+	}
+
+	.entry-content h6 {
+		@apply mt-5 text-[0.875em] font-medium text-muted;
+	}
+
+	/* Tiêu đề đứng ngay sau tiêu đề (vd H2 → H3): sát lại. Tiêu đề đầu nội dung: không cách trên. */
+	.entry-content :is(h2, h3, h4, h5, h6) + :is(h3, h4, h5, h6) {
+		@apply mt-2;
+	}
+
+	/* Phần tử ngay sau tiêu đề (đoạn, danh sách, bảng…): sát tiêu đề hơn khoảng cách giữa 2 đoạn. */
+	.entry-content :is(h2, h3, h4, h5, h6) + :not(h2, h3, h4, h5, h6) {
+		@apply mt-3;
+	}
+
+	.entry-content > :is(h2, h3, h4, h5, h6):first-child {
+		@apply mt-0;
+	}
+
+	.entry-content :is(h2, h3, h4, h5, h6) a {
+		@apply text-inherit no-underline hover:underline;
+	}
+
+	.entry-content a {
+		@apply underline underline-offset-2 hover:text-primary-dark;
+	}
+
+	.entry-content ul {
+		@apply list-disc pl-6;
+	}
+
+	.entry-content ol {
+		@apply list-decimal pl-6;
+	}
+
+	.entry-content li + li {
+		@apply mt-1;
+	}
+
+	.entry-content img {
+		@apply h-auto max-w-full rounded-lg;
+	}
+
+	.entry-content blockquote {
+		@apply border-l-4 border-primary bg-soft px-5 py-3 italic;
+	}
+
+	/*
+	 * Bảng (vd của Advanced Editor Tools). inc/content.php bọc mỗi <table> trong .rhm-table:
+	 * khung bo góc, cuộn ngang trong khung trên mobile (ô tối thiểu 7.5rem → chữ không bị bẻ vụn).
+	 * Hàng tiêu đề: <thead> / <th>, hoặc hàng đầu tiên nếu bảng không có <thead> (bảng TinyMCE mặc định) —
+	 * thêm class "no-header" cho bảng (Thuộc tính bảng → Nâng cao → Lớp) để hàng đầu là dữ liệu thường.
+	 * Hàng xen kẽ màu, rê chuột → nền mint, cột đầu chữ đậm (bảng so sánh).
+	 */
+	.entry-content .rhm-table {
+		@apply overflow-x-auto overscroll-x-contain rounded-2xl border border-line bg-white shadow-card;
+	}
+
+	/*
+	 * Bảng luôn rộng 100% khung: kéo đổi độ rộng trong trình soạn thảo ghi width nội tuyến (vd "width: 85.88%" hoặc px)
+	 * → bảng hẹp hơn khung trắng bo góc, lộ khoảng trống bên phải. !important để thắng style nội tuyến; tỉ lệ cột
+	 * (width % của từng ô) vẫn giữ, trình duyệt chia lại cho đủ 100%. Bảng nhiều cột vẫn cuộn ngang nhờ min-width của ô.
+	 */
+	.entry-content .rhm-table table {
+		@apply border-collapse text-[0.9375em] leading-normal;
+		width: 100% !important;
+	}
+
+	.entry-content .rhm-table :is(th, td) {
+		@apply min-w-30 border-r border-b border-line px-4 py-3 text-left align-top transition-colors;
+	}
+
+	.entry-content .rhm-table :is(th, td):last-child {
+		@apply border-r-0;
+	}
+
+	.entry-content .rhm-table tbody tr:last-child > :is(th, td) {
+		@apply border-b-0;
+	}
+
+	.entry-content .rhm-table tbody tr:nth-child(even) > :is(th, td) {
+		@apply bg-soft/70;
+	}
+
+	.entry-content .rhm-table tbody tr:hover > :is(th, td) {
+		@apply bg-mint;
+	}
+
+	.entry-content .rhm-table tbody tr > :first-child {
+		@apply font-semibold text-dark;
+	}
+
+	/* Hàng tiêu đề (đặt sau cùng + selector mạnh hơn để thắng nền xen kẽ / hover / cột đầu). */
+	.entry-content .rhm-table thead :is(th, td),
+	.entry-content .rhm-table table:not(.no-header) > tbody:first-child > tr:first-child > :is(th, td) {
+		@apply border-white/15 bg-teal-dark font-semibold text-white;
+	}
+
+	.entry-content .rhm-table caption {
+		@apply caption-bottom px-4 py-3 text-left text-sm text-muted;
+	}
+
+	/*
+	 * Gợi ý "còn cột bên cạnh" khi bảng cuộn ngang (mobile): mép phía còn nội dung mờ dần.
+	 * CSS thuần theo vị trí cuộn (scroll-driven animation): bảng không cuộn được → timeline không hoạt động → không mờ.
+	 * Trình duyệt chưa hỗ trợ: bỏ qua (giữ nguyên như cũ).
+	 */
+	@supports (animation-timeline: scroll()) {
+		.entry-content .rhm-table {
+			animation: rhm-table-edge linear both;
+			animation-timeline: scroll(self inline);
+		}
+
+		@keyframes rhm-table-edge {
+			0% {
+				mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+			}
+
+			8%,
+			92% {
+				mask-image: linear-gradient(to right, transparent, #000 3rem, #000 calc(100% - 3rem), transparent);
+			}
+
+			100% {
+				mask-image: linear-gradient(to right, transparent, #000 3rem);
+			}
+		}
+	}
+
+	.entry-content iframe,
+	.entry-content video,
+	.entry-content embed,
+	.entry-content object {
+		@apply max-w-full;
+	}
+
+	.entry-content pre {
+		@apply max-w-full overflow-x-auto rounded-lg bg-soft p-4 text-sm;
+	}
+
+	/* Căn ảnh của Classic Editor. */
+	.entry-content .alignleft {
+		@apply mr-4 mb-2 sm:float-left;
+	}
+
+	.entry-content .alignright {
+		@apply mb-2 ml-4 sm:float-right;
+	}
+
+	.entry-content .aligncenter {
+		@apply mx-auto block;
+	}
+
+	.entry-content .wp-caption {
+		@apply max-w-full;
+	}
+
+	.entry-content .wp-caption-text {
+		@apply mt-1 text-sm text-muted;
+	}
+}

@@ -1,0 +1,38 @@
+/*
+ * footer.css — nạp ở MỌI trang. Kèm form đặt lịch (_booking-form), popup đặt lịch, nút liên hệ nhanh (in sau </footer>).
+ */
+@import "../_tailwind.css";
+@import "../components/_booking-form.css";
+@import "../components/_booking-popup.css";
+@import "../components/_floating-cta.css";
+
+/* Utility chỉ áp dụng trong .site-footer (footer). */
+@layer utilities {
+	.site-footer {
+		@tailwind utilities source(none);
+	}
+}
+
+@source "../../../footer.php";
+@source "../../../inc/footer.php";
+
+@layer components {
+	/* Vùng scope của utility footer: style của chính thẻ <footer> đặt ở đây. */
+	.site-footer {
+		@apply bg-footer pt-12 text-[15px] leading-relaxed text-footer-text lg:pt-14;
+	}
+
+	/* Tiêu đề cột (vàng, in hoa). */
+	.footer-heading {
+		@apply mb-4 text-[15px] leading-snug font-bold text-footer-accent uppercase lg:text-base;
+	}
+
+	/* Menu "Điều khoản chính sách" (wp_nav_menu vị trí footer, class "footer-nav"): mỗi mục có dấu chấm đầu dòng. */
+	.footer-nav li + li {
+		@apply mt-2;
+	}
+
+	.footer-nav a {
+		@apply flex gap-2 text-footer-text before:content-['·'] hover:text-footer-accent;
+	}
+}
