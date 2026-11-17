@@ -23,6 +23,7 @@ function rhm_customizer_fields(): array {
 		'rhm_flag_en_url'     => array( __( 'Link cờ Anh (header)', 'themeranghammatsgcantho' ), 'url', 'esc_url_raw' ),
 		'rhm_email'           => array( __( 'Email', 'themeranghammatsgcantho' ), 'email', 'sanitize_email' ),
 		'rhm_address'         => array( __( 'Địa chỉ', 'themeranghammatsgcantho' ), 'textarea', 'sanitize_textarea_field' ),
+		'rhm_tax_code'        => array( __( 'MST (mã số thuế)', 'themeranghammatsgcantho' ), 'text', 'sanitize_text_field' ),
 		'rhm_working_hours'   => array( __( 'Giờ làm việc', 'themeranghammatsgcantho' ), 'textarea', 'sanitize_textarea_field' ),
 		'rhm_map_url'         => array( __( 'Link nhúng Google Maps (Chia sẻ → Nhúng bản đồ → lấy link trong src). Trống: tự tạo từ địa chỉ', 'themeranghammatsgcantho' ), 'url', 'esc_url_raw' ),
 		'rhm_booking_page'    => array( __( 'Trang Liên hệ / Đặt lịch', 'themeranghammatsgcantho' ), 'dropdown-pages', 'absint' ),
@@ -256,7 +257,7 @@ function rhm_customize_footer( WP_Customize_Manager $wp_customize ): void {
 		'rhm_footer',
 		array(
 			'title'       => __( 'Chân trang (Footer)', 'themeranghammatsgcantho' ),
-			'description' => __( 'Cột 1: logo (Biểu tượng trang web) + tiêu đề + khẩu hiệu + tối đa 2 địa chỉ của chi nhánh tích "Ghim" ở "Chi nhánh (Trang chủ)" (chưa ghim: địa chỉ ở "Thông tin phòng khám"). Cột 2: chọn bên dưới. Cột 3 "Kết nối với chúng tôi": hotline, email, giờ làm việc ("Thông tin phòng khám") + mạng xã hội. Điều khoản chính sách: Menu → vị trí "Menu chân trang".', 'themeranghammatsgcantho' ),
+			'description' => __( 'Cột 1: logo (Biểu tượng trang web) + tiêu đề + khẩu hiệu + địa chỉ và MST ở "Thông tin phòng khám". Dưới 3 cột: tối đa 2 chi nhánh tích "Ghim" ở "Chi nhánh (Trang chủ)". Cột 2: chọn bên dưới. Cột 3 "Kết nối với chúng tôi": hotline, email, giờ làm việc ("Thông tin phòng khám") + mạng xã hội. Điều khoản chính sách: Menu → vị trí "Menu chân trang".', 'themeranghammatsgcantho' ),
 			'priority'    => 36,
 		)
 	);
@@ -275,6 +276,8 @@ function rhm_customize_footer( WP_Customize_Manager $wp_customize ): void {
 		array(
 			'rhm_footer_slogan'             => $text( 'slogan', __( 'Khẩu hiệu dưới logo', 'themeranghammatsgcantho' ) ),
 			'rhm_footer_title'              => $text( 'title', __( 'Tiêu đề cạnh logo (tên phòng khám)', 'themeranghammatsgcantho' ) ),
+			'rhm_footer_pinned_title'       => $text( 'pinned_title', __( 'Cột 1 – tiêu đề khối chi nhánh ghim (để trống: không in)', 'themeranghammatsgcantho' ) ),
+			'rhm_footer_map_text'           => $text( 'map_text', __( 'Cột 1 – chữ link bản đồ', 'themeranghammatsgcantho' ) ),
 			'rhm_footer_middle'             => array(
 				__( 'Nội dung cột giữa', 'themeranghammatsgcantho' ),
 				'radio',

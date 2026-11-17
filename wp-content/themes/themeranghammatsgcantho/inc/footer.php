@@ -3,8 +3,9 @@
  * Chân trang: dữ liệu từ Customizer → "Chân trang (Footer)". Hiển thị: footer.php. CSS: footer.css (@source file này).
  *
  * Bố cục 3 cột (2026-11-17):
- * 1. Thương hiệu: logo + tiêu đề + khẩu hiệu + tối đa RHM_FOOTER_PINNED_MAX địa chỉ = chi nhánh được tích "Ghim" ở
- *    Tùy biến → "Chi nhánh (Trang chủ)" (rhm_get_footer_pinned_branches()); chưa ghim chi nhánh nào → địa chỉ ở "Thông tin phòng khám".
+ * 1. Thương hiệu: logo + tiêu đề + khẩu hiệu + địa chỉ, MST của "Thông tin phòng khám" (rhm_get_footer_clinic_info()).
+ *    Vùng dưới 3 cột: tối đa RHM_FOOTER_PINNED_MAX chi nhánh được tích "Ghim" ở Tùy biến → "Chi nhánh (Trang chủ)"
+ *    (rhm_get_footer_pinned_branches()); chưa ghim chi nhánh nào → không in vùng này.
  * 2. Cột linh động (setting rhm_footer_middle): "policy" = menu vị trí "footer" (Điều khoản chính sách) |
  *    "branches" = Hệ thống chi nhánh (chi nhánh chọn ở "Chi nhánh hiển thị", chỉ in địa chỉ). Lựa chọn không có dữ liệu
  *    → tự dùng lựa chọn còn lại; khi cột giữa là chi nhánh, menu chính sách chuyển xuống hàng bản quyền.
@@ -28,6 +29,8 @@ function rhm_footer_defaults(): array {
 		'title'              => get_bloginfo( 'name' ),
 		'middle'             => 'policy',
 		'slogan'             => __( 'Vì nụ cười Việt Nam', 'themeranghammatsgcantho' ),
+		'pinned_title'       => '',
+		'map_text'           => __( 'Xem bản đồ', 'themeranghammatsgcantho' ),
 		'branch_title'       => __( 'Hệ thống chi nhánh', 'themeranghammatsgcantho' ),
 		'branch_button_text' => __( 'Xem chi tiết địa chỉ', 'themeranghammatsgcantho' ),
 		'policy_title'       => __( 'Điều khoản chính sách', 'themeranghammatsgcantho' ),
@@ -132,13 +135,15 @@ function rhm_get_footer_contacts(): array {
 }
 
 /**
- * Địa chỉ ở cột thương hiệu: chi nhánh tích "Ghim" trong Tùy biến → "Chi nhánh (Trang chủ)" (rhm_home_branch_ids),
+ * Thông tin chi nhánh ở cột thương hiệu: chi nhánh tích "Ghim" trong Tùy biến → "Chi nhánh (Trang chủ)" (rhm_home_branch_ids),
  * đúng thứ tự đã sắp, tối đa RHM_FOOTER_PINNED_MAX. Khác section trang chủ: KHÔNG cần ảnh đại diện, chỉ cần địa chỉ.
+ * Chưa ghim chi nhánh nào → mảng rỗng (địa chỉ "Thông tin phòng khám" đã in dưới logo, rhm_get_footer_clinic_info()).
  *
- * @return array<int, array{name:string, address:string, map_url:string}> chưa escape.
+ * @return array<int, array{name:string, address:string, old_address:string, hotline:string, email:string, hours:string, map_url:string}> chưa escape.
  */
 function rhm_get_footer_pinned_branches(): array {
 	$branches = array_column( rhm_get_branches(), null, 'id' );
+	$keys     = array( 'name', 'address', 'old_address', 'hotline', 'email', 'hours', 'map_url' );
 	$items    = array();
 
 	foreach ( rhm_get_list( 'rhm_home_branch_ids' ) as $item ) {
@@ -146,28 +151,45 @@ function rhm_get_footer_pinned_branches(): array {
 		if ( '1' !== ( $item['pinned'] ?? '' ) || isset( $items[ $id ] ) || '' === trim( (string) ( $branches[ $id ]['address'] ?? '' ) ) ) {
 			continue;
 		}
-		$items[ $id ] = array(
-			'name'    => trim( (string) $branches[ $id ]['name'] ),
-			'address' => trim( (string) $branches[ $id ]['address'] ),
-			'map_url' => (string) ( $branches[ $id ]['map_url'] ?? '' ),
-		);
+		foreach ( $keys as $key ) {
+			$items[ $id ][ $key ] = trim( (string) ( $branches[ $id ][ $key ] ?? '' ) );
+		}
 		if ( count( $items ) >= RHM_FOOTER_PINNED_MAX ) {
 			break;
 		}
 	}
 
-	if ( ! $items ) {
-		$address = trim( rhm_get_option( 'rhm_address' ) );
-		if ( '' !== $address ) {
-			$items[] = array(
-				'name'    => '',
-				'address' => $address,
-				'map_url' => '',
-			);
-		}
+	return array_values( $items );
+}
+
+/**
+ * Thông tin phòng khám dưới logo (cột thương hiệu): địa chỉ + MST từ Tùy biến → "Thông tin phòng khám"; dòng trống bị bỏ.
+ * Hotline / email / giờ làm việc không lặp lại ở đây (đã có ở cột "Kết nối với chúng tôi").
+ *
+ * @return array<int, array{icon:string, label:string, text:string}> chưa escape; label = chữ in trước nội dung ('' = không in).
+ */
+function rhm_get_footer_clinic_info(): array {
+	$items = array();
+
+	$address = trim( rhm_get_option( 'rhm_address' ) );
+	if ( '' !== $address ) {
+		$items[] = array(
+			'icon'  => 'map-pin',
+			'label' => '',
+			'text'  => $address,
+		);
 	}
 
-	return array_values( $items );
+	$tax_code = trim( rhm_get_option( 'rhm_tax_code' ) );
+	if ( '' !== $tax_code ) {
+		$items[] = array(
+			'icon'  => 'document',
+			'label' => __( 'MST:', 'themeranghammatsgcantho' ),
+			'text'  => $tax_code,
+		);
+	}
+
+	return $items;
 }
 
 /** Lựa chọn nội dung cột giữa. */

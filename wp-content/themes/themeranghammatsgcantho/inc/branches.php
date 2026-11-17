@@ -107,7 +107,31 @@ function rhm_branch_acf(): void {
 					'label'        => __( 'Hotline', 'themeranghammatsgcantho' ),
 					'type'         => 'text',
 					'placeholder'  => '1900 xxxx',
-					'instructions' => __( 'Nhập như muốn hiển thị (vd 0909 123 456); link gọi điện tự bỏ khoảng trắng.', 'themeranghammatsgcantho' ),
+					'instructions' => __( 'Nhập như muốn hiển thị (vd 0909 123 456); link gọi điện tự bỏ khoảng trắng. Nhiều số: cách nhau bằng " - " (có khoảng trắng 2 bên) hoặc dấu phẩy, mỗi số thành 1 link gọi riêng.', 'themeranghammatsgcantho' ),
+				),
+				array(
+					'key'          => 'field_rhm_branch_old_address',
+					'name'         => 'rhm_branch_old_address',
+					'label'        => __( 'Địa chỉ cũ (tùy chọn)', 'themeranghammatsgcantho' ),
+					'type'         => 'text',
+					'instructions' => __( 'Địa chỉ trước khi sáp nhập phường/quận. Footer hiện "(Đ/c cũ: …)" dưới địa chỉ.', 'themeranghammatsgcantho' ),
+				),
+				array(
+					'key'         => 'field_rhm_branch_email',
+					'name'        => 'rhm_branch_email',
+					'label'       => __( 'Email', 'themeranghammatsgcantho' ),
+					'type'        => 'email',
+					'placeholder' => 'cskh@example.vn',
+				),
+				array(
+					'key'          => 'field_rhm_branch_hours',
+					'name'         => 'rhm_branch_hours',
+					'label'        => __( 'Giờ làm việc', 'themeranghammatsgcantho' ),
+					'type'         => 'textarea',
+					'rows'         => 5,
+					'new_lines'    => '',
+					'placeholder'  => "– Thứ 2 – thứ 7: 07:30 – 19:00\n– Chủ nhật: 07:30 – 12:00",
+					'instructions' => __( 'Mỗi dòng 1 ý, hiển thị đúng như nhập (tự gõ "–" hoặc "+" đầu dòng nếu muốn).', 'themeranghammatsgcantho' ),
 				),
 				array(
 					'key'          => 'field_rhm_branch_map_url',
@@ -125,7 +149,7 @@ function rhm_branch_acf(): void {
 }
 add_action( 'acf/init', 'rhm_branch_acf' );
 
-/** Giá trị field chi nhánh ('address' | 'hotline' | 'map_url'); không có ACF thì đọc post meta. */
+/** Giá trị field chi nhánh ('address' | 'old_address' | 'hotline' | 'email' | 'hours' | 'map_url'); không có ACF thì đọc post meta. */
 function rhm_get_branch_field( string $name, int $post_id ): string {
 	$value = function_exists( 'get_field' ) ? get_field( 'rhm_branch_' . $name, $post_id ) : get_post_meta( $post_id, 'rhm_branch_' . $name, true );
 	return is_scalar( $value ) ? (string) $value : '';
@@ -135,16 +159,16 @@ function rhm_get_branch_field( string $name, int $post_id ): string {
  * Chi nhánh đã xuất bản, theo tên (A → Z).
  *
  * @param array{term?:string} $args term: slug danh mục để lọc (gồm cả danh mục con).
- * @return array<int, array{id:int, name:string, address:string, hotline:string, map_url:string, image:int, terms:string[]}>
- *         address/hotline/map_url đã làm sạch, chưa escape; image = ID ảnh đại diện (0 nếu không có — khi in vẫn kiểm tra
+ * @return array<int, array{id:int, name:string, address:string, old_address:string, hotline:string, email:string, hours:string, map_url:string, image:int, terms:string[]}>
+ *         chuỗi đã làm sạch (address, hours có thể nhiều dòng; hotline có thể nhiều số → rhm_split_phones()), chưa escape; image = ID ảnh đại diện (0 nếu không có — khi in vẫn kiểm tra
  *         wp_attachment_is_image() vì cache có thể giữ ID ảnh vừa bị xóa khỏi Thư viện); terms = tên danh mục.
  */
 function rhm_get_branches( array $args = array() ): array {
 	static $cache = array();
 
 	$term = sanitize_title( (string) ( $args['term'] ?? '' ) );
-	// v2: thêm map_url — đổi tiền tố khi đổi cấu trúc mảng để bỏ transient cũ ngay.
-	$key  = 'rhm_branches_v2_' . (int) get_option( 'rhm_branches_cache_version', 1 ) . '_' . md5( $term );
+	// v3: thêm old_address, email, hours — đổi tiền tố khi đổi cấu trúc mảng để bỏ transient cũ ngay.
+	$key  = 'rhm_branches_v3_' . (int) get_option( 'rhm_branches_cache_version', 1 ) . '_' . md5( $term );
 	if ( isset( $cache[ $key ] ) ) {
 		return $cache[ $key ];
 	}
@@ -177,13 +201,16 @@ function rhm_get_branches( array $args = array() ): array {
 	foreach ( get_posts( $query ) as $post ) {
 		$terms      = get_the_terms( $post, RHM_BRANCH_TAXONOMY );
 		$branches[] = array(
-			'id'      => (int) $post->ID,
-			'name'    => trim( get_the_title( $post ) ),
-			'address' => trim( sanitize_textarea_field( rhm_get_branch_field( 'address', $post->ID ) ) ),
-			'hotline' => trim( sanitize_text_field( rhm_get_branch_field( 'hotline', $post->ID ) ) ),
-			'map_url' => esc_url_raw( trim( rhm_get_branch_field( 'map_url', $post->ID ) ), array( 'http', 'https' ) ),
-			'image'   => (int) get_post_thumbnail_id( $post ),
-			'terms'   => is_array( $terms ) ? wp_list_pluck( $terms, 'name' ) : array(),
+			'id'          => (int) $post->ID,
+			'name'        => trim( get_the_title( $post ) ),
+			'address'     => trim( sanitize_textarea_field( rhm_get_branch_field( 'address', $post->ID ) ) ),
+			'old_address' => trim( sanitize_text_field( rhm_get_branch_field( 'old_address', $post->ID ) ) ),
+			'hotline'     => trim( sanitize_text_field( rhm_get_branch_field( 'hotline', $post->ID ) ) ),
+			'email'       => sanitize_email( rhm_get_branch_field( 'email', $post->ID ) ),
+			'hours'       => trim( sanitize_textarea_field( rhm_get_branch_field( 'hours', $post->ID ) ) ),
+			'map_url'     => esc_url_raw( trim( rhm_get_branch_field( 'map_url', $post->ID ) ), array( 'http', 'https' ) ),
+			'image'       => (int) get_post_thumbnail_id( $post ),
+			'terms'       => is_array( $terms ) ? wp_list_pluck( $terms, 'name' ) : array(),
 		);
 	}
 

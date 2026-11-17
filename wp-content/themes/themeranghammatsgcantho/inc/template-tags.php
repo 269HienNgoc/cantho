@@ -35,6 +35,18 @@ function rhm_get_tel_href( string $phone ): string {
 }
 
 /**
+ * Tách ô nhiều số điện thoại thành từng số (giữ cách viết để hiển thị).
+ * Phân cách: " - " / " – " (có khoảng trắng 2 bên), dấu phẩy, chấm phẩy, "/", xuống dòng.
+ * Gạch nối không có khoảng trắng (vd 093-180-6858) vẫn thuộc 1 số. Bỏ mục không có chữ số.
+ *
+ * @return string[]
+ */
+function rhm_split_phones( string $value ): array {
+	$parts = preg_split( '/\s+[-–]\s+|[,;\/\r\n]+/u', $value ) ?: array();
+	return array_values( array_filter( array_map( 'trim', $parts ), static fn( string $part ): bool => (bool) preg_match( '/\d/', $part ) ) );
+}
+
+/**
  * Nút Đặt lịch. $class: utility bổ sung/ghi đè (utility luôn thắng .btn vì nằm ở layer sau).
  * $icon_class: khác rỗng → thêm icon lịch phía trước (class của icon). $arrow: thêm mũi tên → phía sau.
  * $text: chữ nút (trống → "Đặt lịch hẹn"). $short: chữ ngắn hiện dưới 1024px (chữ đầy đủ chỉ hiện từ 1024px; span ẩn

@@ -24,7 +24,7 @@ $rhm_head_id = ( '' !== $rhm_id ? $rhm_id : 'booking-band' ) . '-title';
 ?>
 <section<?php echo '' !== $rhm_id ? ' id="' . esc_attr( $rhm_id ) . '"' : ''; ?> class="py-8 lg:py-10" aria-labelledby="<?php echo esc_attr( $rhm_head_id ); ?>">
 	<div class="site-container">
-	<div class="grid gap-8 rounded-2xl bg-linear-to-br from-river to-primary px-6 py-10 text-white sm:px-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16 lg:px-14 lg:py-14">
+	<div class="grid gap-8 rounded-2xl bg-linear-to-br from-river to-primary px-6 py-10 text-white sm:px-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16 lg:px-8 lg:py-8">
 		<div class="max-w-2xl">
 			<h2 id="<?php echo esc_attr( $rhm_head_id ); ?>" class="text-[27px] leading-tight font-bold text-balance lg:text-4xl"><?php echo esc_html( $rhm_title ); ?></h2>
 			<p class="mt-3 text-lg leading-relaxed text-white/85"><?php echo esc_html( $rhm_text ); ?></p>

@@ -19,12 +19,12 @@
 @layer components {
 	/* Vùng scope của utility footer: style của chính thẻ <footer> đặt ở đây. */
 	.site-footer {
-		@apply relative bg-footer pt-12 text-[15px] leading-relaxed text-footer-text lg:pt-14;
+		@apply relative bg-footer pt-12 text-base leading-relaxed text-footer-text lg:pt-14; /* 16px; hàng bản quyền/DMCA tự đặt text-sm riêng. */
 	}
 
 	/* Tiêu đề cột (vàng, in hoa). */
 	.footer-heading {
-		@apply mb-4 text-[15px] leading-snug font-bold text-footer-accent uppercase lg:text-base;
+		@apply mb-4 text-base leading-snug font-bold text-footer-accent uppercase;
 	}
 
 	/* Menu "Điều khoản chính sách" (wp_nav_menu vị trí footer, class "footer-nav"): mỗi mục có dấu chấm đầu dòng. */
