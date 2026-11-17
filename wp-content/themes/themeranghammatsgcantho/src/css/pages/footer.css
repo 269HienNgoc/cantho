@@ -1,0 +1,53 @@
+/*
+ * footer.css — nạp ở MỌI trang. Kèm form đặt lịch (_booking-form), popup đặt lịch, nút liên hệ nhanh (in sau </footer>).
+ */
+@import "../_tailwind.css";
+@import "../components/_booking-form.css";
+@import "../components/_booking-popup.css";
+@import "../components/_floating-cta.css";
+
+/* Utility chỉ áp dụng trong .site-footer (footer). */
+@layer utilities {
+	.site-footer {
+		@tailwind utilities source(none);
+	}
+}
+
+@source "../../../footer.php";
+@source "../../../inc/footer.php";
+
+@layer components {
+	/* Vùng scope của utility footer: style của chính thẻ <footer> đặt ở đây. */
+	.site-footer {
+		@apply relative bg-footer pt-12 text-[15px] leading-relaxed text-footer-text lg:pt-14;
+	}
+
+	/* Tiêu đề cột (vàng, in hoa). */
+	.footer-heading {
+		@apply mb-4 text-[15px] leading-snug font-bold text-footer-accent uppercase lg:text-base;
+	}
+
+	/* Menu "Điều khoản chính sách" (wp_nav_menu vị trí footer, class "footer-nav"): mỗi mục có dấu chấm đầu dòng. */
+	.footer-nav li + li {
+		@apply mt-2;
+	}
+
+	.footer-nav a {
+		@apply flex gap-2 text-footer-text before:text-footer-accent before:content-['›'] hover:text-footer-accent;
+	}
+
+	/* Menu chính sách dạng dòng ở hàng bản quyền (khi cột giữa là Hệ thống chi nhánh). */
+	.footer-legal ul,
+	ul.footer-legal {
+		@apply flex flex-wrap gap-x-5 gap-y-1 text-sm;
+	}
+
+	.footer-legal a {
+		@apply text-footer-muted underline-offset-4 hover:text-footer-accent hover:underline;
+	}
+
+	/* Vạch nhấn gradient trên mép footer. */
+	.site-footer::before {
+		@apply absolute inset-x-0 top-0 h-1 bg-linear-to-r from-brand via-secondary to-brand content-[''];
+	}
+}

@@ -1,0 +1,72 @@
+/*
+ * single-post.css — chi tiết bài viết (single.php). Token + component nội dung: components/_content.css.
+ */
+@import "../_tailwind.css";
+@import "../components/_content.css";
+@import "../components/_entry-content.css";
+@import "../components/_toc.css";
+@import "../components/_doctor-box.css";
+
+/* Utility chỉ áp dụng trong .site-main (vùng <main>). */
+@layer utilities {
+	.site-main {
+		@tailwind utilities source(none);
+	}
+}
+
+@source "../../../single.php";
+@source "../../../template-parts/components/post-header.php";
+@source "../../../template-parts/components/booking-band.php";
+@source "../../../template-parts/components/post-faq.php";
+@source "../../../template-parts/components/post-references.php";
+@source "../../../template-parts/components/doctor-box.php";
+@source "../../../inc/template-tags.php";
+
+@layer components {
+	/* Chữ nội dung bài (độc giả 27–60 tuổi): 18px, từ 1024px 19px; dòng 1.75. Tiêu đề / bảng tự lớn theo (em). */
+	.entry-content {
+		--entry-font-size: 1.125rem;
+		--entry-line-height: 1.75;
+		color: var(--color-silt);
+	}
+
+	@media (width >= 64rem) {
+		.entry-content {
+			--entry-font-size: 1.1875rem;
+		}
+	}
+
+	/* Bài trước / bài sau (the_post_navigation): 2 ô cạnh nhau, ngăn bằng đường Chỉ. */
+	.post-navigation .nav-links {
+		@apply mt-12 grid gap-6 border-t border-thread pt-6 sm:grid-cols-2;
+	}
+
+	.post-navigation .nav-next {
+		@apply sm:col-start-2 sm:text-right;
+	}
+
+	.post-navigation a {
+		@apply block text-silt;
+	}
+
+	.post-navigation__label {
+		@apply block text-[15px];
+	}
+
+	.post-navigation__title {
+		@apply mt-1 block text-lg leading-snug font-bold text-ink transition-colors duration-150;
+	}
+
+	.post-navigation a:hover .post-navigation__title {
+		@apply text-primary;
+	}
+}
+
+/*
+ * Sao đánh giá (plugin kk-star-ratings) ở đầu bài: ẩn chữ "4.5/5 - (n bình chọn)" / "Rate this post" của plugin
+ * (chỉ hiện ngôi sao). CSS plugin không nằm trong @layer → ghi đè NGOÀI layer. Ẩn bằng CSS (không gỡ khỏi HTML)
+ * vì JS plugin in lại cả khối sau khi bấm sao. Cỡ sao giữ theo RHM_STAR_RATING_ATTS.
+ */
+.post-header .kk-star-ratings .kksr-legend {
+	display: none;
+}

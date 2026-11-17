@@ -1,11 +1,11 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/inc/plugin/**"
-  - "wp-content/themes/themeranghammatsg/inc/plugins.php"
-  - "wp-content/themes/themeranghammatsg/inc/enqueue.php"
-  - "wp-content/themes/themeranghammatsg/inc/cleanup.php"
-  - "wp-content/themes/themeranghammatsg/header.php"
-  - "wp-content/themes/themeranghammatsg/footer.php"
+  - "wp-content/themes/themeranghammatsgcantho/inc/plugin/**"
+  - "wp-content/themes/themeranghammatsgcantho/inc/plugins.php"
+  - "wp-content/themes/themeranghammatsgcantho/inc/enqueue.php"
+  - "wp-content/themes/themeranghammatsgcantho/inc/cleanup.php"
+  - "wp-content/themes/themeranghammatsgcantho/header.php"
+  - "wp-content/themes/themeranghammatsgcantho/footer.php"
   - "wp-content/plugins/**"
 ---
 

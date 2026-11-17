@@ -1,9 +1,9 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/src/js/**"
-  - "wp-content/themes/themeranghammatsg/inc/**"
-  - "wp-content/themes/themeranghammatsg/template-parts/**"
-  - "wp-content/themes/themeranghammatsg/vite.config.js"
+  - "wp-content/themes/themeranghammatsgcantho/src/js/**"
+  - "wp-content/themes/themeranghammatsgcantho/inc/**"
+  - "wp-content/themes/themeranghammatsgcantho/template-parts/**"
+  - "wp-content/themes/themeranghammatsgcantho/vite.config.js"
 ---
 
 # JavaScript: TBT ≤ 60 ms (lab), INP ≤ 100 ms (field)

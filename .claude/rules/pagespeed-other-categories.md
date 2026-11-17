@@ -1,7 +1,7 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/**/*.php"
-  - "wp-content/themes/themeranghammatsg/src/**"
+  - "wp-content/themes/themeranghammatsgcantho/**/*.php"
+  - "wp-content/themes/themeranghammatsgcantho/src/**"
 ---
 
 # PSI Accessibility / Best Practices / SEO: 100 điểm

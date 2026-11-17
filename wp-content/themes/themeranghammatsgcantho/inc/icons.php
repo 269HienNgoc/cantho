@@ -1,0 +1,54 @@
+<?php
+/**
+ * Bộ icon SVG inline (màu theo currentColor) dùng trong template.
+ * Icon menu / dịch vụ nổi bật nằm ở thư viện file assets/icons/ (inc/icon-library.php).
+ *
+ * @package themeranghammatsgcantho
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Icon giao diện dùng trực tiếp trong template (header, tìm kiếm, nút…).
+ */
+function rhm_ui_icons(): array {
+	return array(
+		'home'        => '<path fill="currentColor" d="M12 2.6 1.5 11.4l1.3 1.5L4 11.9V21a1 1 0 0 0 1 1h5v-6h4v6h5a1 1 0 0 0 1-1v-9.1l1.2 1 1.3-1.5L17 7.6V4h-2.5v1.5z"/>',
+		'phone'       => '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M5 3.5h3.2l1.6 4.2-2.1 1.5a12 12 0 0 0 5.6 5.6l1.5-2.1 4.2 1.6V17a2.5 2.5 0 0 1-2.7 2.5C9.6 19 3.8 13.2 3.5 6.2A2.5 2.5 0 0 1 5 3.5z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M14.5 3.5a6 6 0 0 1 6 6M14.5 7a2.6 2.6 0 0 1 2.5 2.5"/>',
+		'search'      => '<circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m16.5 16.5 5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
+		'chevron'     => '<path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/>',
+		'calendar'    => '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"/></g>',
+		'arrow-right' => '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/>',
+		'play'        => '<path fill="currentColor" d="M8 5.2v13.6a.8.8 0 0 0 1.2.7l10.6-6.8a.8.8 0 0 0 0-1.4L9.2 4.5A.8.8 0 0 0 8 5.2z"/>',
+		'folder'      => '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M3.5 6.5A1.5 1.5 0 0 1 5 5h4.2l2 2.2H19a1.5 1.5 0 0 1 1.5 1.5v9.3A1.5 1.5 0 0 1 19 19.5H5A1.5 1.5 0 0 1 3.5 18z"/>',
+		'close'       => '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/>',
+		'map-pin'     => '<path fill="currentColor" fill-rule="evenodd" d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 5.3 6.2 11.6 6.9 12.3a.9.9 0 0 0 1.2 0c.7-.7 6.9-7 6.9-12.3A7.5 7.5 0 0 0 12 2zm0 4.6a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8z"/>',
+		'mail'        => '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6 8.5 7 8.5-7"/></g>',
+		'clock'       => '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></g>',
+		'refresh'     => '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.6-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.6 4.5L20 16m0 4v-4h-4"/></g>',
+		'check'       => '<circle cx="12" cy="12" r="10" fill="currentColor"/><path fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m7.5 12.3 3 3 6-6.3"/>',
+		'list'        => '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".6" fill="currentColor"/><circle cx="4.5" cy="12" r=".6" fill="currentColor"/><circle cx="4.5" cy="18" r=".6" fill="currentColor"/></g>',
+		'more'        => '<circle cx="5.5" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="18.5" cy="12" r="2" fill="currentColor"/>',
+		'tooth'       => '<path fill="currentColor" d="M12 5.6C10.4 4 8.6 3.5 7 3.8 4.6 4.3 3.5 6.6 4 9.3c.4 2.2 1.4 3.6 1.8 5.6.5 2.6.8 5.6 2.4 5.6 1.5 0 1.6-3.4 2.3-5.1.3-.8.8-1.2 1.5-1.2s1.2.4 1.5 1.2c.7 1.7.8 5.1 2.3 5.1 1.6 0 1.9-3 2.4-5.6.4-2 1.4-3.4 1.8-5.6.5-2.7-.6-5-3-5.5-1.6-.3-3.4.2-5 1.8z"/>',
+		'user'        => '<circle cx="12" cy="7.5" r="4.5" fill="currentColor"/><path fill="currentColor" d="M3 21c0-4.4 4-7.5 9-7.5s9 3.1 9 7.5z"/>',
+		'document'    => '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 3v5h5M8.5 12.5h7m-7 4h7m-7-8h2"/></g>',
+	);
+}
+
+/**
+ * Trả về SVG của icon (chuỗi hằng trong theme, an toàn để echo). Tên không tồn tại → chuỗi rỗng.
+ */
+function rhm_get_icon( string $name, string $class = '' ): string {
+	$icons = rhm_ui_icons();
+
+	if ( ! isset( $icons[ $name ] ) ) {
+		// Không có trong bộ UI → thử thư viện icon menu (assets/icons/menu, inc/icon-library.php).
+		return rhm_icon_svg( 'menu', $name, $class );
+	}
+
+	return sprintf(
+		'<svg class="%1$s" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">%2$s</svg>',
+		esc_attr( trim( 'icon icon-' . $name . ' ' . $class ) ),
+		$icons[ $name ]
+	);
+}

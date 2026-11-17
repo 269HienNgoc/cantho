@@ -12,14 +12,15 @@ defined( 'ABSPATH' ) || exit;
 
 final class RHM_Demo_Images {
 
-	/** Màu thương hiệu theo src/css/theme.css của theme. */
+	/** Màu thương hiệu theo src/css/theme.css của theme (bộ xanh lá từ theme 2026-11-17). */
 	private const PALETTE = array(
-		'primary' => array( 11, 122, 85 ),
-		'deep'    => array( 0, 52, 66 ),
-		'teal'    => array( 29, 92, 90 ),
-		'green'   => array( 19, 181, 75 ),
-		'mint'    => array( 236, 247, 243 ),
-		'accent'  => array( 211, 216, 103 ),
+		'primary' => array( 0, 122, 59 ),
+		'deep'    => array( 11, 59, 35 ),
+		'teal'    => array( 0, 107, 56 ),
+		'green'   => array( 148, 200, 61 ),
+		'sky'     => array( 0, 156, 74 ),
+		'mint'    => array( 232, 246, 237 ),
+		'accent'  => array( 184, 218, 132 ),
 		'cream'   => array( 252, 249, 240 ),
 		'gray'    => array( 120, 132, 140 ),
 		'grayd'   => array( 70, 80, 88 ),

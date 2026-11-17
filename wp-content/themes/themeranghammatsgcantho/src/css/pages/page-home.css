@@ -1,0 +1,24 @@
+/*
+ * page-home.css — chỉ Trang chủ (front-page.php).
+ * Section: template-parts/home/ (+ components/booking-band.php). Token + component nội dung: components/_content.css.
+ * Thêm section mới → @source file của nó (và file inc/ nếu hàm trong đó in class).
+ */
+@import "../_tailwind.css";
+/* CSS lõi Swiper (slider chi nhánh), đặt vào layer components để utility vẫn ghi đè được. */
+@import "swiper/css" layer(components);
+@import "../components/_content.css";
+@import "../components/_entry-content.css";
+@import "../components/_carousel.css";
+
+/* Utility chỉ áp dụng trong .site-main (vùng <main>). */
+@layer utilities {
+	.site-main {
+		@tailwind utilities source(none);
+	}
+}
+
+@source "../../../front-page.php";
+@source "../../../template-parts/home/";
+@source "../../../template-parts/components/booking-band.php";
+@source "../../../inc/hero.php";
+@source "../../../inc/news.php";

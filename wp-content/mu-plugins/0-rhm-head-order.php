@@ -12,7 +12,7 @@
  * Đừng đổi tên thành chữ cái (vd rhm-…): Swift sẽ nạp trước và thứ tự quay về như cũ.
  * File nằm ngoài theme → deploy riêng vào wp-content/mu-plugins/.
  *
- * @package themeranghammatsg
+ * @package themeranghammatsgcantho
  */
 
 defined( 'ABSPATH' ) || exit;

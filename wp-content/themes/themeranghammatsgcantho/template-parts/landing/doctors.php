@@ -1,0 +1,22 @@
+<?php
+/**
+ * Landing – Đội ngũ bác sĩ: dùng lại section trang chủ (template-parts/sections/doctors.php), chỉ đổi chữ tiêu đề.
+ * Field: inc/landing/layouts/doctors.php.
+ *
+ * @package themeranghammatsgcantho
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+$rhm_data = $args['data'] ?? array();
+get_template_part(
+	'template-parts/sections/doctors',
+	null,
+	array(
+		'id'          => $args['id'],
+		'eyebrow'     => rhm_landing_text( $rhm_data, 'eyebrow' ),
+		'title'       => rhm_landing_text( $rhm_data, 'title' ),
+		'title_color' => rhm_landing_color( $rhm_data, 'title_color' ),
+		'h3_color'    => rhm_landing_color( $rhm_data, 'h3_color' ),
+	)
+);

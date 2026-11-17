@@ -1,6 +1,6 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/**"
+  - "wp-content/themes/themeranghammatsgcantho/**"
   - "wp-content/plugins/**"
 ---
 

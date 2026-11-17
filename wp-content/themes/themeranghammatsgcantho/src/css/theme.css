@@ -1,0 +1,53 @@
+/*
+ * Design tokens dùng chung — được @import vào MỌI file trong pages/.
+ * Tailwind chỉ xuất biến CSS nào thực sự được dùng trong từng file, nên import nhiều lần không làm phình CSS.
+ *
+ * Dùng trong markup: bg-primary, text-dark, font-sans, max-w-site, xs:…
+ */
+@theme {
+	/* Font duy nhất của site: Roboto (tự host, subset latin + vietnamese). */
+	--font-*: initial;
+	--font-sans: "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+	/* Màu thương hiệu: bộ xanh lá (2026-11-17, thay bộ xanh dương 2026-11-16). Tên token cũ (green, teal, mint…) giữ nguyên
+	 * để template không phải đổi class. Tỉ lệ tương phản ghi trên nền trắng.
+	 * primary = màu NÚT / LINK / CHỮ NHẤN (#007A3B, chữ trắng 5,4:1); brand #009C4A chỉ 3,6:1 với chữ trắng → chỉ dùng cho
+	 * icon, viền, gradient, trang trí (đồ họa cần ≥ 3:1), KHÔNG làm nền chữ thường hay màu chữ thường. */
+	--color-primary: #007a3b;        /* nút, link, chữ nhấn (5,4:1) */
+	--color-primary-dark: #006b38;   /* hover nút (6,6:1) */
+	--color-primary-light: #56b977;  /* trang trí, gradient (không làm màu chữ) */
+	--color-brand: #009c4a;          /* xanh thương hiệu: icon, gradient, viền nhấn (3,6:1) */
+	--color-secondary: #94c83d;      /* xanh nõn chuối: điểm nhấn trang trí, gradient */
+	--color-secondary-dark: #6fa52c;
+	--color-secondary-light: #b8da84;
+	--color-secondary-soft: #f2f8e9; /* nền dải phụ */
+	--color-accent: #ed1c24;         /* đỏ nhấn (khuyến mãi, nhãn) — chữ trắng 4,0:1 → chỉ chữ lớn / đậm ≥ 18,66px */
+	--color-green: #007a3b;          /* (tên cũ) nút tìm kiếm */
+	--color-green-dark: #006b38;
+	--color-icon: #009c4a;           /* icon menu */
+	--color-dark: #111827;           /* tiêu đề, chữ menu, hotline (17,7:1) */
+	--color-teal: #006b38;           /* (tên cũ) icon Trang chủ */
+	--color-teal-dark: #006b38;      /* thanh lọc chuyên mục: nút đang chọn, chữ */
+	--color-mint: #e8f6ed;           /* nền nhạt: nút lọc, vòng icon, dải section */
+	--color-mint-dark: #d3ecdc;      /* nền nhạt khi rê chuột */
+	--color-body: #475569;           /* chữ nội dung (7,6:1; 6,9:1 trên mint) */
+	--color-muted: #5b6b80;          /* chữ phụ: #64748B của bảng màu chỉ 4,4:1 trên mint → đậm hơn 1 chút để ≥ 4,9:1 */
+	--color-line: #dcebe0;           /* viền, đường kẻ */
+	--color-soft: #e8f6ed;           /* nền dải / section */
+	--color-canvas: #ffffff;         /* nền trang */
+	--color-canvas-alt: #f6faf7;     /* nền trang phụ */
+	--color-deep: #0b3b23;           /* xanh rừng đậm: H1 bài viết, nền chân trang (chữ trắng 13:1) */
+	--color-footer: var(--color-deep); /* nền chân trang */
+	--color-footer-accent: #b8da84;  /* chân trang: tiêu đề cột, icon; số hotline dải đặt lịch (≥ 3,4:1 trên primary-dark, chữ lớn) */
+	--color-footer-text: #d4e9db;    /* chân trang: chữ (11:1) */
+	--color-footer-muted: #a9c7b4;   /* chân trang: dòng bản quyền (6,9:1) */
+
+	/* Khung nội dung: max-w-site */
+	--container-site: 80rem;         /* 1280px (nội dung 1248px sau lề 2 × 16px; trước 2026-11-17 là 1440px) */
+
+	/* Breakpoint bổ sung: xs = 560px (mặc định: sm 640, md 768, lg 1024, xl 1280, 2xl 1536) */
+	--breakpoint-xs: 35rem;
+
+	--shadow-card: 0 6px 24px rgb(17 23 43 / 0.08);
+	--shadow-soft: 0 4px 20px rgb(0 122 59 / 0.07);   /* thẻ trắng viền line của giao diện mới */
+}

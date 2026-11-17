@@ -1,6 +1,6 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/**/*.php"
+  - "wp-content/themes/themeranghammatsgcantho/**/*.php"
 ---
 
 # Ảnh responsive: mỗi màn hình tải đúng 1 file, không hại SEO / PageSpeed

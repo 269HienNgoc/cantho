@@ -1,8 +1,8 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/inc/**"
-  - "wp-content/themes/themeranghammatsg/*.php"
-  - "wp-content/themes/themeranghammatsg/template-parts/**"
+  - "wp-content/themes/themeranghammatsgcantho/inc/**"
+  - "wp-content/themes/themeranghammatsgcantho/*.php"
+  - "wp-content/themes/themeranghammatsgcantho/template-parts/**"
   - "wp-content/plugins/**"
   - ".htaccess"
   - "wp-config.php"

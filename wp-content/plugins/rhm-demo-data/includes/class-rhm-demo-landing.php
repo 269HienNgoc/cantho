@@ -3,11 +3,11 @@
  * Trang landing mẫu "Giới thiệu" (Page Template page-templates/tpl-gioi-thieu.php của theme): đủ mọi section
  * của chủ đề, nội dung theo thiết kế trang Giới thiệu, ảnh sinh bằng GD.
  *
- * - Field khớp theme: themeranghammatsg/inc/landing/ (Flexible Content "rhm_landing_sections", chủ đề slug "about").
+ * - Field khớp theme: themeranghammatsgcantho/inc/landing/ (Flexible Content "rhm_landing_sections", chủ đề slug "about").
  * - Ghi meta theo đúng định dạng ACF lưu (value + "_name" => field key; flexible = mảng tên layout;
  *   repeater = số dòng + name_i_sub) → ACF PRO đọc được ngay, kể cả khi lúc tạo ACF chưa bật.
  * - Chạy lại: cập nhật đúng trang mẫu cũ (meta _rhm_demo = landing), không tạo trang trùng.
- * - Icon (highlights, cards, ô nổi bật) là tên file trong themeranghammatsg/assets/icons/landing/.
+ * - Icon (highlights, cards, ô nổi bật) là tên file trong themeranghammatsgcantho/assets/icons/landing/.
  *
  * @package rhm-demo-data
  */
@@ -562,7 +562,7 @@ HTML;
 
 	/**
 	 * Ghi Flexible Content theo định dạng ACF lưu trong postmeta (xóa dữ liệu section cũ trước).
-	 * Key field = field_rhm_landing_<slug chủ đề>_<layout>_<field> (themeranghammatsg/inc/landing/fields.php).
+	 * Key field = field_rhm_landing_<slug chủ đề>_<layout>_<field> (themeranghammatsgcantho/inc/landing/fields.php).
 	 */
 	private static function write_sections( int $id, array $rows ): void {
 		global $wpdb;

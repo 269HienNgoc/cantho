@@ -1,11 +1,11 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/src/css/**"
-  - "wp-content/themes/themeranghammatsg/inc/enqueue.php"
-  - "wp-content/themes/themeranghammatsg/inc/cleanup.php"
-  - "wp-content/themes/themeranghammatsg/header.php"
-  - "wp-content/themes/themeranghammatsg/functions.php"
-  - "wp-content/themes/themeranghammatsg/vite.config.js"
+  - "wp-content/themes/themeranghammatsgcantho/src/css/**"
+  - "wp-content/themes/themeranghammatsgcantho/inc/enqueue.php"
+  - "wp-content/themes/themeranghammatsgcantho/inc/cleanup.php"
+  - "wp-content/themes/themeranghammatsgcantho/header.php"
+  - "wp-content/themes/themeranghammatsgcantho/functions.php"
+  - "wp-content/themes/themeranghammatsgcantho/vite.config.js"
 ---
 
 # FCP + Speed Index: CSS, font, `<head>` (FCP ≤ 1,0 s, SI ≤ 1,9 s mobile lab)

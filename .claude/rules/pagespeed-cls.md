@@ -1,7 +1,7 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/**/*.php"
-  - "wp-content/themes/themeranghammatsg/src/**"
+  - "wp-content/themes/themeranghammatsgcantho/**/*.php"
+  - "wp-content/themes/themeranghammatsgcantho/src/**"
 ---
 
 # CLS (Cumulative Layout Shift): thiết kế để = 0

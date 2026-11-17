@@ -1,7 +1,7 @@
 ---
 paths:
-  - "wp-content/themes/themeranghammatsg/**/*.php"
-  - "wp-content/themes/themeranghammatsg/src/**"
+  - "wp-content/themes/themeranghammatsgcantho/**/*.php"
+  - "wp-content/themes/themeranghammatsgcantho/src/**"
 ---
 
 # LCP (Largest Contentful Paint): ≤ 1,5 s mobile lab, ≤ 1,8 s field

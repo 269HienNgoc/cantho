@@ -1,7 +1,7 @@
 <?php
 /**
  * Nội dung mẫu: 1 bài viết + 1 hồ sơ bác sĩ, khớp đúng field ACF của theme
- * (themeranghammatsg/inc/post-fields.php, inc/doctor-fields.php).
+ * (themeranghammatsgcantho/inc/post-fields.php, inc/doctor-fields.php).
  *
  * @package rhm-demo-data
  */
@@ -60,55 +60,31 @@ final class RHM_Demo_Content {
 	}
 
 	/**
-	 * Banner hero trang chủ (Customizer → Hero banner): mỗi slide 1 ảnh desktop 2048×800 + 1 ảnh mobile dọc 828×1000.
+	 * Ảnh trang chủ (theme ≥ 2026-11-16): hero desktop 5:4 + mobile 4:3, ảnh "Vì sao chọn".
 	 *
-	 * @return array<int, array{desktop:array, mobile:array, link:string}> slide => [slug, rộng, cao, opts].
+	 * @return array<string, array{0:string, 1:int, 2:int, 3:array}> theme mod => [slug, rộng, cao, opts].
 	 */
-	public static function hero_banners(): array {
-		$slides = array(
-			array(
-				'from'  => 'primary',
-				'to'    => 'deep',
-				'badge' => 'ƯU ĐÃI THÁNG NÀY',
-				'title' => 'Niềng răng trong suốt Invisalign',
-				'sub'   => 'Giảm đến 30% chi phí · Trả góp 0% lãi suất',
-				'cta'   => 'Đặt lịch tư vấn miễn phí',
-				'note'  => 'Hotline: 1900 xxxx · Dữ liệu mẫu',
-				'link'  => 'Niềng răng',
-			),
-			array(
-				'from'  => 'teal',
-				'to'    => 'primary',
-				'badge' => 'CÔNG NGHỆ ĐỨC – THỤY SĨ',
-				'title' => 'Trồng răng Implant không đau',
-				'sub'   => 'Phục hồi răng mất vĩnh viễn · Bảo hành trọn đời',
-				'cta'   => 'Nhận báo giá ngay',
-				'note'  => 'Bác sĩ hơn 15 năm kinh nghiệm · Dữ liệu mẫu',
-				'link'  => 'Trồng răng Implant',
-			),
+	public static function home_images(): array {
+		return array(
+			'rhm_hero_image'        => array( 'home-hero-desktop', 1500, 1200, array( 'style' => 'photo', 'from' => 'sky', 'to' => 'primary', 'alt' => 'Bác sĩ thăm khám răng cho khách hàng (ảnh mẫu)' ) ),
+			'rhm_hero_image_mobile' => array( 'home-hero-mobile', 828, 621, array( 'style' => 'photo', 'from' => 'sky', 'to' => 'primary', 'alt' => 'Bác sĩ thăm khám răng cho khách hàng (ảnh mẫu)' ) ),
+			'rhm_home_why_image'    => array( 'home-why-clinic', 1200, 900, array( 'style' => 'photo', 'from' => 'primary', 'to' => 'teal', 'title' => 'Phòng khám', 'subtitle' => 'Ảnh mẫu', 'alt' => 'Không gian phòng khám (ảnh mẫu)' ) ),
 		);
+	}
 
-		$result = array();
-		foreach ( $slides as $i => $s ) {
-			$n    = $i + 1;
-			$opts = array(
-				'style'    => 'hero',
-				'from'     => $s['from'],
-				'to'       => $s['to'],
-				'badge'    => $s['badge'],
-				'title'    => $s['title'],
-				'subtitle' => $s['sub'],
-				'cta'      => $s['cta'],
-				'note'     => $s['note'],
-				'alt'      => $s['title'] . ' – ' . $s['sub'],
-			);
-			$result[ $n ] = array(
-				'desktop' => array( 'hero-' . $n . '-desktop', 2048, 800, $opts ),
-				'mobile'  => array( 'hero-' . $n . '-mobile', 828, 1000, $opts ),
-				'link'    => $s['link'], // Tên chuyên mục: link tới trang chuyên mục (nếu có).
-			);
-		}
-		return $result;
+	/**
+	 * Dịch vụ nổi bật mặc định (chỉ dùng khi Customizer chưa có mục nào): tên, icon bộ menu/ của theme, tên chuyên mục lấy link.
+	 *
+	 * @return array<int, array{title:string, icon:string, link:string}>
+	 */
+	public static function home_services(): array {
+		return array(
+			array( 'title' => 'Niềng răng', 'icon' => 'braces', 'link' => 'Niềng răng' ),
+			array( 'title' => 'Tẩy trắng răng', 'icon' => 'whitening', 'link' => 'Tẩy trắng răng' ),
+			array( 'title' => 'Trồng răng Implant', 'icon' => 'implant', 'link' => 'Trồng răng Implant' ),
+			array( 'title' => 'Bọc răng sứ', 'icon' => 'crown', 'link' => 'Răng sứ thẩm mỹ' ),
+			array( 'title' => 'Khám răng định kỳ', 'icon' => 'calendar', 'link' => '' ),
+		);
 	}
 
 	/* -----------------------------------------------------------------

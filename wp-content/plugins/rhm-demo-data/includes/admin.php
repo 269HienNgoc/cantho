@@ -87,13 +87,13 @@ function rhm_demo_admin_page(): void {
 		</form>
 
 		<hr>
-		<h2>Banner trang chủ</h2>
-		<p>Sinh <strong>2 banner desktop (2048×800)</strong> và <strong>2 banner mobile (828×1000)</strong>, gán vào <em>Giao diện → Tùy biến → Hero banner (Trang chủ)</em> slide 1 và 2.</p>
+		<h2>Ảnh trang chủ</h2>
+		<p>Sinh ảnh mẫu và gán vào <em>Giao diện → Tùy biến</em>: <strong>Hero</strong> (ảnh desktop 1500×1200 + mobile 828×621), <strong>Dịch vụ nổi bật</strong> (ảnh 800×600 cho từng mục; chưa có mục nào thì tạo 5 mục mẫu), <strong>Vì sao chọn</strong> (ảnh phòng khám 1200×900).</p>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 			<input type="hidden" name="action" value="rhm_demo_hero">
 			<?php wp_nonce_field( 'rhm_demo_hero' ); ?>
-			<label><input name="overwrite" type="checkbox" value="1"> Ghi đè slide 1–2 nếu đã có banner</label>
-			<?php submit_button( 'Tạo banner trang chủ', 'secondary' ); ?>
+			<label><input name="overwrite" type="checkbox" value="1"> Ghi đè ô ảnh đã có ảnh</label>
+			<?php submit_button( 'Tạo ảnh trang chủ', 'secondary' ); ?>
 		</form>
 
 		<hr>
@@ -138,10 +138,10 @@ function rhm_demo_handle_hero(): void {
 		rhm_demo_redirect( 'error', 'Lỗi: ' . $e->getMessage() );
 	}
 
-	$message = sprintf( 'Đã tạo %d banner (%d desktop + %d mobile).', 2 * count( $result['slides'] ), count( $result['slides'] ), count( $result['slides'] ) );
+	$message  = sprintf( 'Đã tạo %d ảnh trang chủ.', $result['images'] );
 	$message .= $result['assigned']
-		? ' Đã gán vào slide ' . implode( ', ', $result['assigned'] ) . ' của Hero banner.'
-		: ' Slide 1–2 đã có banner nên chưa gán — tick "Ghi đè" để thay.';
+		? ' Đã gán ' . count( $result['assigned'] ) . ' ô ảnh trong Tùy biến (Hero, Dịch vụ nổi bật, Vì sao chọn).'
+		: ' Các ô ảnh đã có ảnh nên chưa gán — tick "Ghi đè" để thay.';
 	rhm_demo_redirect( 'success', $message );
 }
 add_action( 'admin_post_rhm_demo_hero', 'rhm_demo_handle_hero' );

@@ -21,7 +21,7 @@ final class RHM_Demo_Generator {
 	/** Option lưu ID các term do plugin tạo (để chỉ xóa đúng term của mình). */
 	private const TERMS_OPTION = 'rhm_demo_terms';
 
-	/** Option lưu banner hero thật bị banner mẫu ghi đè (trả lại khi xóa dữ liệu mẫu). */
+	/** Option lưu theme mod trang chủ bị dữ liệu mẫu ghi đè (theme mod => giá trị cũ; trả lại khi xóa dữ liệu mẫu). */
 	private const HERO_BACKUP_OPTION = 'rhm_demo_hero_backup';
 
 	/** @var callable|null */
@@ -103,11 +103,11 @@ final class RHM_Demo_Generator {
 			$this->distribute();
 		}
 
-		// Banner trang chủ: chỉ điền slide còn trống, không đè banner thật.
+		// Ảnh trang chủ: chỉ điền ô còn trống, không đè ảnh thật.
 		$hero = $this->hero( false );
 
 		return array(
-			'images'  => count( $img ) + 2 * count( $hero['slides'] ),
+			'images'  => count( $img ) + $hero['images'],
 			'doctors' => max( 0, $doctors ),
 			'posts'   => max( 0, $posts ),
 			'seconds' => round( microtime( true ) - $start, 1 ),
@@ -117,7 +117,7 @@ final class RHM_Demo_Generator {
 	/**
 	 * Xóa mọi bài viết / bác sĩ / ảnh do plugin tạo, và term do plugin tạo nếu không còn bài nào dùng.
 	 *
-	 * Banner thật bị banner mẫu ghi đè được trả lại như cũ.
+	 * Theme mod trang chủ bị dữ liệu mẫu ghi đè được trả lại như cũ.
 	 *
 	 * @return array{posts:int, images:int, terms:int, kept_terms:string[]}
 	 */
@@ -188,71 +188,83 @@ final class RHM_Demo_Generator {
 	}
 
 	/**
-	 * Sinh banner hero trang chủ (mỗi slide: ảnh desktop 2048×800 + ảnh mobile 828×1000) và gán vào
-	 * Customizer → Hero banner (theme mod rhm_hero_{n}_desktop / _mobile / _link).
+	 * Ảnh trang chủ: hero (desktop + mobile), ảnh "Vì sao chọn", ảnh 4:3 cho từng mục Dịch vụ nổi bật
+	 * (Customizer chưa có dịch vụ nào → tạo 5 mục mẫu). Chỉ điền ô còn trống, trừ khi $overwrite.
+	 * Giá trị bị ghi đè được lưu ở HERO_BACKUP_OPTION (theme mod => giá trị cũ) để trả lại khi xóa dữ liệu mẫu.
 	 *
-	 * @param bool $overwrite true = ghi đè slide đang có ảnh; false = chỉ điền slide còn trống.
-	 * @return array{slides: array<int, array{desktop:int, mobile:int}>, assigned: int[]}
+	 * @param bool $overwrite true = ghi đè ảnh đang có.
+	 * @return array{images: int, assigned: string[]}
 	 */
 	public function hero( bool $overwrite = false ): array {
 		if ( ! RHM_Demo_Images::available() ) {
-			throw new RuntimeException( 'PHP chưa bật extension GD (cần để sinh ảnh banner).' );
+			throw new RuntimeException( 'PHP chưa bật extension GD (cần để sinh ảnh).' );
 		}
 		if ( function_exists( 'set_time_limit' ) ) {
 			set_time_limit( 0 );
 		}
 
 		$images = new RHM_Demo_Images();
-		$result = array( 'slides' => array(), 'assigned' => array() );
+		$result = array( 'images' => 0, 'assigned' => array() );
+		$wanted = RHM_Demo_Content::home_images();
 
-		foreach ( RHM_Demo_Content::hero_banners() as $n => $slide ) {
-			$ids = array();
-			foreach ( array( 'desktop', 'mobile' ) as $device ) {
-				[ $slug, $w, $h, $opts ] = $slide[ $device ];
-				$ids[ $device ]          = $images->get( $slug, $w, $h, $opts );
-				if ( ! $ids[ $device ] ) {
-					throw new RuntimeException( sprintf( 'Không tạo được ảnh "%s". Kiểm tra quyền ghi thư mục wp-content/uploads.', $slug ) );
-				}
+		// Dịch vụ nổi bật: Customizer trống → tạo mục mẫu (tên, icon, link chuyên mục).
+		$has_service = false;
+		for ( $i = 1; $i <= 8; $i++ ) {
+			$has_service = $has_service || '' !== trim( (string) get_theme_mod( "rhm_qs_{$i}_title", '' ) );
+		}
+		if ( ! $has_service ) {
+			foreach ( RHM_Demo_Content::home_services() as $i => $service ) {
+				$n    = $i + 1;
+				$term = '' !== $service['link'] ? get_term_by( 'name', $service['link'], 'category' ) : false;
+				$this->set_demo_mod( "rhm_qs_{$n}_title", $service['title'] );
+				$this->set_demo_mod( "rhm_qs_{$n}_icon_name", $service['icon'] );
+				$this->set_demo_mod( "rhm_qs_{$n}_link", $term ? (string) get_term_link( $term ) : home_url( '/' ) );
 			}
-			$result['slides'][ $n ] = $ids;
-			$this->log( sprintf( 'Banner %d: desktop #%d, mobile #%d.', $n, $ids['desktop'], $ids['mobile'] ) );
-
-			$current = absint( get_theme_mod( "rhm_hero_{$n}_desktop" ) );
-			if ( ! $overwrite && $current && wp_attachment_is_image( $current ) && $current !== $ids['desktop'] ) {
-				continue; // Slide đã có banner thật.
+		}
+		for ( $i = 1; $i <= 8; $i++ ) {
+			$title = trim( (string) get_theme_mod( "rhm_qs_{$i}_title", '' ) );
+			if ( '' !== $title ) {
+				$name                          = (string) preg_replace( '/\s+/u', ' ', $title );
+				$wanted[ "rhm_qs_{$i}_image" ] = array( 'service-' . sanitize_title( $name ), 800, 600, array( 'style' => 'photo', 'from' => 'sky', 'to' => 'primary', 'title' => $name, 'alt' => $name . ' (ảnh mẫu)' ) );
 			}
+		}
 
-			// Slide đang có banner thật (bị --overwrite đè) → lưu lại để xóa dữ liệu mẫu thì trả về.
-			$backup = (array) get_option( self::HERO_BACKUP_OPTION, array() );
-			if ( $current && ! get_post_meta( $current, RHM_DEMO_META, true ) && ! isset( $backup[ $n ] ) ) {
-				foreach ( array( 'desktop', 'mobile', 'link' ) as $field ) {
-					$backup[ $n ][ $field ] = get_theme_mod( "rhm_hero_{$n}_{$field}" );
-				}
-				update_option( self::HERO_BACKUP_OPTION, $backup, false );
+		foreach ( $wanted as $mod => [ $slug, $w, $h, $opts ] ) {
+			$id = $images->get( $slug, $w, $h, $opts );
+			if ( ! $id ) {
+				throw new RuntimeException( sprintf( 'Không tạo được ảnh "%s". Kiểm tra quyền ghi thư mục wp-content/uploads.', $slug ) );
 			}
+			++$result['images'];
 
-			$term = get_term_by( 'name', $slide['link'], 'category' );
-			set_theme_mod( "rhm_hero_{$n}_desktop", $ids['desktop'] );
-			set_theme_mod( "rhm_hero_{$n}_mobile", $ids['mobile'] );
-			set_theme_mod( "rhm_hero_{$n}_link", $term ? get_term_link( $term ) : '' );
-			$result['assigned'][] = $n;
+			$current = absint( get_theme_mod( $mod ) );
+			if ( ! $overwrite && $current && wp_attachment_is_image( $current ) ) {
+				continue; // Đã có ảnh (thật hoặc mẫu).
+			}
+			$this->set_demo_mod( $mod, $id );
+			$result['assigned'][] = $mod;
+			$this->log( sprintf( '%s = ảnh #%d.', $mod, $id ) );
 		}
 
 		return $result;
 	}
 
-	/** Gỡ banner mẫu khỏi Customizer (slide đang dùng ảnh do plugin tạo); slide từng có banner thật thì trả lại. */
-	private function unset_demo_hero(): void {
+	/** Ghi theme mod, lưu giá trị cũ (lần đầu) để unset_demo_hero() trả lại. */
+	private function set_demo_mod( string $mod, mixed $value ): void {
 		$backup = (array) get_option( self::HERO_BACKUP_OPTION, array() );
-		for ( $n = 1; $n <= 5; $n++ ) {
-			$id = absint( get_theme_mod( "rhm_hero_{$n}_desktop" ) );
-			if ( ! $id || ! get_post_meta( $id, RHM_DEMO_META, true ) ) {
-				continue;
+		if ( ! array_key_exists( $mod, $backup ) ) {
+			$backup[ $mod ] = get_theme_mod( $mod, null );
+			update_option( self::HERO_BACKUP_OPTION, $backup, false );
+		}
+		set_theme_mod( $mod, $value );
+	}
+
+	/** Trả các theme mod trang chủ mà plugin đã ghi về giá trị cũ (trước đó chưa có → xóa). */
+	private function unset_demo_hero(): void {
+		foreach ( (array) get_option( self::HERO_BACKUP_OPTION, array() ) as $mod => $old ) {
+			if ( ! is_string( $mod ) ) {
+				continue; // Định dạng cũ (≤ 1.3.1: số slide => field) — bỏ qua.
 			}
-			foreach ( array( 'desktop', 'mobile', 'link' ) as $field ) {
-				$old = $backup[ $n ][ $field ] ?? false;
-				false === $old ? remove_theme_mod( "rhm_hero_{$n}_{$field}" ) : set_theme_mod( "rhm_hero_{$n}_{$field}", $old );
-			}
+			null === $old ? remove_theme_mod( $mod ) : set_theme_mod( $mod, $old );
 		}
 		delete_option( self::HERO_BACKUP_OPTION );
 	}

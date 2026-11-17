@@ -1,0 +1,117 @@
+/*
+ * Giao diện nội dung v1.0 — dùng chung cho 8 loại trang được thiết kế lại (bộ màu xanh lá từ 2026-11-17):
+ * trang chủ, bài viết, danh mục / lưu trữ / tìm kiếm, 404, Liên hệ, hồ sơ bác sĩ, danh sách bác sĩ.
+ * Import vào: page-home, single-post, archive, 404, page-contact, single-doctor.
+ * KHÔNG import vào base / header / footer / page / page-about → Header, Footer, trang thường, landing không đổi.
+ *
+ * Token: chỉ THÊM tên mới (không định nghĩa lại token của theme.css — mọi bundle inline cùng 1 trang, định nghĩa lại
+ * ở :root sẽ đổi màu cả Header/Footer). Tailwind chỉ xuất biến nào được dùng.
+ *
+ * Nguyên tắc:
+ * - 1 họ chữ Roboto (400 / 500 / 700). Tiêu đề to, chặt, text-wrap: balance. Chỉ dòng nhỏ trên tiêu đề (.c-eyebrow) in hoa.
+ * - Thẻ trắng viền Chỉ, bo 12px, bóng rất nhẹ (.c-card); nền dải / khối nhấn = Sứ (xanh rất nhạt).
+ * - Dải đặt lịch (components/booking-band.php): nền xanh đậm, số hotline cỡ lớn.
+ * - Chuyển động chỉ để phản hồi thao tác (≤ 150ms), tắt khi prefers-reduced-motion.
+ */
+@theme {
+	--color-ink: #111827; /* Mực: tiêu đề, chữ đậm (17,7:1 trên trắng). */
+	--color-silt: #475569; /* Chữ đọc, chữ phụ (7,6:1 trên trắng, 6,9:1 trên Sứ). */
+	--color-porcelain: #e8f6ed; /* Sứ: nền dải, nền ảnh chờ. */
+	--color-river: #006b38; /* Dải đậm (đặt lịch): chữ trắng 6,6:1. */
+	--color-thread: #dcebe0; /* Chỉ: viền thẻ, đường kẻ phân tách. */
+}
+
+@layer base {
+	/* Focus rõ hơn trong vùng nội dung (người lớn tuổi, thao tác bàn phím). Header/Footer giữ focus của base.css. */
+	.site-main :focus-visible {
+		outline: 3px solid var(--color-primary);
+		outline-offset: 3px;
+	}
+
+	.site-main {
+		color: var(--color-silt);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.site-main *,
+		.site-main *::before,
+		.site-main *::after {
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}
+
+@layer components {
+	/* Dòng nhỏ trên tiêu đề (dữ liệu "eyebrow" của Customizer/ACF): in hoa, giãn chữ nhẹ. */
+	.c-eyebrow {
+		@apply mb-3 text-sm leading-snug font-bold tracking-[0.08em] text-primary uppercase;
+	}
+
+	.c-h1 {
+		@apply text-[32px] leading-[1.15] font-bold text-balance text-ink lg:text-5xl;
+	}
+
+	.c-h2 {
+		@apply text-[27px] leading-[1.2] font-bold text-balance text-ink lg:text-4xl;
+	}
+
+	.c-h3 {
+		@apply text-xl leading-snug font-bold text-ink lg:text-[22px];
+	}
+
+	.c-lead {
+		@apply text-[19px] leading-relaxed text-silt lg:text-[21px];
+	}
+
+	/* Link chữ: gạch chân mảnh, rõ là link với người không quen web. */
+	.c-link {
+		@apply font-medium text-primary underline decoration-primary/40 decoration-1 underline-offset-4 transition-colors duration-150 hover:text-primary-dark hover:decoration-primary-dark;
+	}
+
+	/* Link tiêu đề trong danh sách: không gạch chân, đổi màu khi rê chuột. */
+	.c-title-link {
+		@apply text-ink transition-colors duration-150 hover:text-primary;
+	}
+
+	/* Thẻ trắng: viền Chỉ, bo 12px, bóng rất nhẹ. */
+	.c-card {
+		@apply overflow-hidden rounded-xl border border-thread bg-white shadow-soft;
+	}
+
+	/* Thẻ là link: rê chuột viền đậm hơn (chỉ màu, không đổi kích thước). */
+	.c-card-link {
+		@apply transition-[border-color,box-shadow] duration-150 hover:border-primary/40 hover:shadow-[0_8px_28px_rgb(0_122_59/0.12)];
+	}
+
+	/* Vòng tròn icon (icon SVG inline currentColor bên trong). */
+	.c-icon-badge {
+		@apply flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-primary ring-1 ring-thread;
+	}
+
+	/* Khung ảnh: bo 8px, nền Sứ khi ảnh chưa tải. */
+	.c-media {
+		@apply relative overflow-hidden rounded-lg bg-porcelain;
+	}
+
+	/* Thông tin phụ (ngày, chuyên mục…): các mục cách nhau bằng khoảng trắng, không dùng dấu chấm giữa. */
+	.c-meta {
+		@apply flex flex-wrap items-center gap-x-5 gap-y-1 text-[15px] text-silt;
+	}
+
+	/* Nút: cao ≥ 48px. .btn / .btn-primary / .btn-outline của base.css giữ nguyên; lớp này chỉ đặt kích thước. */
+	.c-btn {
+		@apply min-h-12 rounded-lg px-6 text-base font-bold;
+	}
+
+	/* Nút ‹ › của slider (Swiper .carousel-prev/next hoặc _tiles.js data-rhm-tiles-prev/next). */
+	.c-nav {
+		@apply flex size-12 cursor-pointer items-center justify-center rounded-full border border-thread bg-white text-ink transition-colors duration-150 hover:border-primary hover:text-primary disabled:cursor-default disabled:opacity-35 disabled:hover:border-thread disabled:hover:text-ink;
+	}
+
+	/* Hàng tiêu đề section: tiêu đề trái, công cụ (link, nút ‹ ›) phải. */
+	.c-head {
+		@apply mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 lg:mb-10;
+	}
+}

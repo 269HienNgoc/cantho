@@ -1,0 +1,20 @@
+<?php
+/**
+ * Landing – Kêu gọi đặt lịch: dùng lại template-parts/sections/booking-cta.php. Field: inc/landing/layouts/booking.php.
+ *
+ * @package themeranghammatsgcantho
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+$rhm_data = $args['data'] ?? array();
+get_template_part(
+	'template-parts/sections/booking-cta',
+	null,
+	array(
+		'id'          => $args['id'],
+		'title'       => rhm_landing_text( $rhm_data, 'title' ),
+		'title_color' => rhm_landing_color( $rhm_data, 'title_color' ),
+		'text'        => rhm_landing_text( $rhm_data, 'text' ),
+	)
+);

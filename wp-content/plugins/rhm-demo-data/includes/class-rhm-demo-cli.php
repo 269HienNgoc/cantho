@@ -78,10 +78,10 @@ final class RHM_Demo_CLI {
 	}
 
 	/**
-	 * Tạo 2 banner desktop (2048×800) + 2 banner mobile (828×1000) và gán vào Hero banner slide 1–2.
+	 * Tạo ảnh trang chủ (Hero, Dịch vụ nổi bật, Vì sao chọn) và gán vào các ô ảnh còn trống của Tùy biến.
 	 *
 	 * [--overwrite]
-	 * : Ghi đè slide đang có banner.
+	 * : Ghi đè ô đang có ảnh.
 	 */
 	public function hero( array $args, array $assoc ): void {
 		try {
@@ -89,7 +89,7 @@ final class RHM_Demo_CLI {
 		} catch ( Throwable $e ) {
 			WP_CLI::error( $e->getMessage() );
 		}
-		WP_CLI::success( $r['assigned'] ? 'Đã gán slide ' . implode( ', ', $r['assigned'] ) . '.' : 'Đã tạo ảnh; slide đã có banner nên chưa gán (dùng --overwrite).' );
+		WP_CLI::success( $r['assigned'] ? 'Đã gán: ' . implode( ', ', $r['assigned'] ) . '.' : 'Đã tạo ảnh; các ô đã có ảnh nên chưa gán (dùng --overwrite).' );
 	}
 
 	/**
