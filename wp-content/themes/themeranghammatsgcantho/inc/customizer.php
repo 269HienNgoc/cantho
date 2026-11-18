@@ -24,8 +24,8 @@ function rhm_customizer_fields(): array {
 		'rhm_email'           => array( __( 'Email', 'themeranghammatsgcantho' ), 'email', 'sanitize_email' ),
 		'rhm_address'         => array( __( 'Địa chỉ', 'themeranghammatsgcantho' ), 'textarea', 'sanitize_textarea_field' ),
 		'rhm_tax_code'        => array( __( 'MST (mã số thuế)', 'themeranghammatsgcantho' ), 'text', 'sanitize_text_field' ),
+		'rhm_license'         => array( __( 'GPHĐ (giấy phép hoạt động)', 'themeranghammatsgcantho' ), 'text', 'sanitize_text_field' ),
 		'rhm_working_hours'   => array( __( 'Giờ làm việc', 'themeranghammatsgcantho' ), 'textarea', 'sanitize_textarea_field' ),
-		'rhm_map_url'         => array( __( 'Link nhúng Google Maps (Chia sẻ → Nhúng bản đồ → lấy link trong src). Trống: tự tạo từ địa chỉ', 'themeranghammatsgcantho' ), 'url', 'esc_url_raw' ),
 		'rhm_booking_page'    => array( __( 'Trang Liên hệ / Đặt lịch', 'themeranghammatsgcantho' ), 'dropdown-pages', 'absint' ),
 		'rhm_booking_form_id' => array( __( 'ID form đặt lịch (Fluent Forms)', 'themeranghammatsgcantho' ), 'number', 'absint' ),
 	);
@@ -257,7 +257,7 @@ function rhm_customize_footer( WP_Customize_Manager $wp_customize ): void {
 		'rhm_footer',
 		array(
 			'title'       => __( 'Chân trang (Footer)', 'themeranghammatsgcantho' ),
-			'description' => __( 'Cột 1: logo (Biểu tượng trang web) + tiêu đề + khẩu hiệu + địa chỉ và MST ở "Thông tin phòng khám". Dưới 3 cột: tối đa 2 chi nhánh tích "Ghim" ở "Chi nhánh (Trang chủ)". Cột 2: chọn bên dưới. Cột 3 "Kết nối với chúng tôi": hotline, email, giờ làm việc ("Thông tin phòng khám") + mạng xã hội. Điều khoản chính sách: Menu → vị trí "Menu chân trang".', 'themeranghammatsgcantho' ),
+			'description' => __( 'Cột 1: logo (Biểu tượng trang web) + tiêu đề + khẩu hiệu + địa chỉ, MST và GPHĐ ở "Thông tin phòng khám". Dưới 3 cột: tối đa 2 chi nhánh tích "Ghim" ở "Chi nhánh (Trang chủ)". Cột 2: chọn bên dưới. Cột 3 "Kết nối với chúng tôi": hotline, email, giờ làm việc ("Thông tin phòng khám") + mạng xã hội. Điều khoản chính sách: Menu → vị trí "Menu chân trang".', 'themeranghammatsgcantho' ),
 			'priority'    => 36,
 		)
 	);
@@ -330,14 +330,14 @@ function rhm_customize_footer( WP_Customize_Manager $wp_customize ): void {
 add_action( 'customize_register', 'rhm_customize_footer' );
 
 /**
- * Trang Liên hệ – Đặt lịch (inc/contact.php). Thông tin liên hệ, bản đồ, ID form: "Thông tin phòng khám"; chi nhánh, mạng xã hội: "Chân trang (Footer)".
+ * Trang Liên hệ – Đặt lịch (inc/contact.php). Thông tin liên hệ, ID form: "Thông tin phòng khám".
  */
 function rhm_customize_contact( WP_Customize_Manager $wp_customize ): void {
 	$wp_customize->add_section(
 		'rhm_contact',
 		array(
 			'title'       => __( 'Trang Liên hệ', 'themeranghammatsgcantho' ),
-			'description' => __( 'Hotline, email, địa chỉ, giờ làm việc, link bản đồ, ID form đặt lịch: sửa ở "Thông tin phòng khám". Chi nhánh và mạng xã hội: "Chân trang (Footer)". Bản đồ tự tạo từ địa chỉ nếu không nhập link embed.', 'themeranghammatsgcantho' ),
+			'description' => __( 'Tiêu đề trang = tiêu đề của Page. Địa chỉ, hotline, email, giờ làm việc, ID form đặt lịch: sửa ở "Thông tin phòng khám".', 'themeranghammatsgcantho' ),
 			'priority'    => 37,
 		)
 	);
@@ -354,11 +354,11 @@ function rhm_customize_contact( WP_Customize_Manager $wp_customize ): void {
 		$wp_customize,
 		'rhm_contact',
 		array(
-			'rhm_contact_intro'      => $text( 'intro', __( 'Đoạn giới thiệu dưới tiêu đề trang', 'themeranghammatsgcantho' ), 'textarea' ),
-			'rhm_contact_form_title' => $text( 'form_title', __( 'Form – tiêu đề', 'themeranghammatsgcantho' ) ),
-			'rhm_contact_form_note'  => $text( 'form_note', __( 'Form – mô tả', 'themeranghammatsgcantho' ), 'textarea' ),
-			'rhm_contact_cta_title'  => $text( 'cta_title', __( 'Khối hotline – tiêu đề', 'themeranghammatsgcantho' ) ),
-			'rhm_contact_cta_text'   => $text( 'cta_text', __( 'Khối hotline – mô tả', 'themeranghammatsgcantho' ), 'textarea' ),
+			'rhm_contact_eyebrow'    => $text( 'eyebrow', __( 'Nhãn nhỏ trên tiêu đề trang (trống = ẩn)', 'themeranghammatsgcantho' ) ),
+			'rhm_contact_intro'      => $text( 'intro', __( 'Dòng mô tả dưới tiêu đề trang', 'themeranghammatsgcantho' ), 'textarea' ),
+			'rhm_contact_info_title' => $text( 'info_title', __( 'Tiêu đề thẻ thông tin liên hệ', 'themeranghammatsgcantho' ) ),
+			'rhm_contact_form_title' => $text( 'form_title', __( 'Tiêu đề thẻ form', 'themeranghammatsgcantho' ) ),
+			'rhm_contact_form_note'  => $text( 'form_note', __( 'Mô tả form đặt lịch (hồ sơ bác sĩ)', 'themeranghammatsgcantho' ), 'textarea' ),
 		)
 	);
 }

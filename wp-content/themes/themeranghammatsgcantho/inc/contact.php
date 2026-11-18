@@ -1,8 +1,8 @@
 <?php
 /**
  * Trang "Liên hệ – Đặt lịch" (page-templates/tpl-lien-he.php): chữ từ Customizer → "Trang Liên hệ".
- * Hotline / email / địa chỉ / giờ làm việc / bản đồ / ID form: "Thông tin phòng khám".
- * Chi nhánh + mạng xã hội: dùng chung danh sách của "Chân trang (Footer)" (inc/footer.php).
+ * Hotline / email / địa chỉ / giờ làm việc / ID form: "Thông tin phòng khám". Không có bản đồ nhúng (bỏ 2026-11-18).
+ * Bố cục đơn giản từ 2026-11-18: banner chữ + thẻ "Thông tin liên hệ" + thẻ form; bỏ khối hotline, chi nhánh, mạng xã hội.
  *
  * @package themeranghammatsgcantho
  */
@@ -14,11 +14,12 @@ defined( 'ABSPATH' ) || exit;
  */
 function rhm_contact_defaults(): array {
 	return array(
-		'intro'      => __( 'Đội ngũ bác sĩ và tư vấn viên luôn sẵn sàng lắng nghe. Đặt lịch khám online hoặc liên hệ trực tiếp để được tư vấn và sắp xếp thời gian phù hợp nhất.', 'themeranghammatsgcantho' ),
-		'form_title' => __( 'Đặt lịch hẹn', 'themeranghammatsgcantho' ),
+		'eyebrow'    => __( 'Luôn đồng hành cùng bạn', 'themeranghammatsgcantho' ),
+		'intro'      => __( 'Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn.', 'themeranghammatsgcantho' ),
+		'info_title' => __( 'Thông tin liên hệ', 'themeranghammatsgcantho' ),
+		'form_title' => __( 'Đăng ký tư vấn', 'themeranghammatsgcantho' ),
+		// Chỉ dùng ở khối đặt lịch của hồ sơ bác sĩ (template-parts/doctor/booking.php); trang Liên hệ không in.
 		'form_note'  => __( 'Để lại thông tin, đội ngũ tư vấn sẽ gọi lại xác nhận lịch hẹn trong thời gian sớm nhất.', 'themeranghammatsgcantho' ),
-		'cta_title'  => __( 'Cần tư vấn ngay?', 'themeranghammatsgcantho' ),
-		'cta_text'   => __( 'Gọi hotline để được bác sĩ tư vấn trực tiếp về tình trạng răng của bạn.', 'themeranghammatsgcantho' ),
 	);
 }
 
@@ -27,25 +28,4 @@ function rhm_contact_defaults(): array {
  */
 function rhm_contact_text( string $key ): string {
 	return trim( (string) get_theme_mod( "rhm_contact_{$key}", rhm_contact_defaults()[ $key ] ?? '' ) );
-}
-
-/**
- * URL nhúng bản đồ: link embed nhập trong Customizer (chỉ nhận link /maps/embed hoặc output=embed — link chia sẻ thường
- * bị Google chặn hiển thị trong iframe), không có thì tự tạo từ địa chỉ phòng khám. '' = không có bản đồ.
- */
-function rhm_get_contact_map_src(): string {
-	$url = rhm_get_option( 'rhm_map_url' );
-	if ( str_contains( $url, '/maps/embed' ) || str_contains( $url, 'output=embed' ) ) {
-		return $url;
-	}
-
-	$address = trim( rhm_get_option( 'rhm_address' ) );
-	return '' !== $address ? 'https://maps.google.com/maps?q=' . rawurlencode( $address ) . '&hl=vi&z=16&output=embed' : '';
-}
-
-/**
- * Link "Chỉ đường" mở Google Maps (ứng dụng trên điện thoại) tới địa chỉ.
- */
-function rhm_get_directions_url( string $address ): string {
-	return 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $address );
 }

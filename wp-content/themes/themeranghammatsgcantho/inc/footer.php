@@ -3,7 +3,7 @@
  * Chân trang: dữ liệu từ Customizer → "Chân trang (Footer)". Hiển thị: footer.php. CSS: footer.css (@source file này).
  *
  * Bố cục 3 cột (2026-11-17):
- * 1. Thương hiệu: logo + tiêu đề + khẩu hiệu + địa chỉ, MST của "Thông tin phòng khám" (rhm_get_footer_clinic_info()).
+ * 1. Thương hiệu: logo + tiêu đề + khẩu hiệu + địa chỉ, MST, GPHĐ của "Thông tin phòng khám" (rhm_get_footer_clinic_info()).
  *    Vùng dưới 3 cột: tối đa RHM_FOOTER_PINNED_MAX chi nhánh được tích "Ghim" ở Tùy biến → "Chi nhánh (Trang chủ)"
  *    (rhm_get_footer_pinned_branches()); chưa ghim chi nhánh nào → không in vùng này.
  * 2. Cột linh động (setting rhm_footer_middle): "policy" = menu vị trí "footer" (Điều khoản chính sách) |
@@ -121,7 +121,8 @@ function rhm_get_footer_contacts(): array {
 		$items[] = array(
 			'icon'  => 'mail',
 			'label' => __( 'Email', 'themeranghammatsgcantho' ),
-			'html'  => sprintf( '<a class="wrap-anywhere text-white hover:text-footer-accent" href="%s">%s</a>', esc_url( 'mailto:' . $email ), esc_html( $email ) ),
+			// <wbr> sau @: cột hẹp thì email xuống dòng ở đó, không cắt giữa chữ (wrap-anywhere chỉ dự phòng cho phần quá dài).
+			'html'  => sprintf( '<a class="wrap-anywhere text-white hover:text-footer-accent" href="%s">%s</a>', esc_url( 'mailto:' . $email ), str_replace( '@', '@<wbr>', esc_html( $email ) ) ),
 		);
 	}
 	if ( $hours ) {
@@ -139,11 +140,11 @@ function rhm_get_footer_contacts(): array {
  * đúng thứ tự đã sắp, tối đa RHM_FOOTER_PINNED_MAX. Khác section trang chủ: KHÔNG cần ảnh đại diện, chỉ cần địa chỉ.
  * Chưa ghim chi nhánh nào → mảng rỗng (địa chỉ "Thông tin phòng khám" đã in dưới logo, rhm_get_footer_clinic_info()).
  *
- * @return array<int, array{name:string, address:string, old_address:string, hotline:string, email:string, hours:string, map_url:string}> chưa escape.
+ * @return array<int, array{name:string, address:string, old_address:string, license:string, hotline:string, email:string, hours:string, map_url:string}> chưa escape.
  */
 function rhm_get_footer_pinned_branches(): array {
 	$branches = array_column( rhm_get_branches(), null, 'id' );
-	$keys     = array( 'name', 'address', 'old_address', 'hotline', 'email', 'hours', 'map_url' );
+	$keys     = array( 'name', 'address', 'old_address', 'license', 'hotline', 'email', 'hours', 'map_url' );
 	$items    = array();
 
 	foreach ( rhm_get_list( 'rhm_home_branch_ids' ) as $item ) {
@@ -163,7 +164,7 @@ function rhm_get_footer_pinned_branches(): array {
 }
 
 /**
- * Thông tin phòng khám dưới logo (cột thương hiệu): địa chỉ + MST từ Tùy biến → "Thông tin phòng khám"; dòng trống bị bỏ.
+ * Thông tin phòng khám dưới logo (cột thương hiệu): địa chỉ + MST + GPHĐ từ Tùy biến → "Thông tin phòng khám"; dòng trống bị bỏ.
  * Hotline / email / giờ làm việc không lặp lại ở đây (đã có ở cột "Kết nối với chúng tôi").
  *
  * @return array<int, array{icon:string, label:string, text:string}> chưa escape; label = chữ in trước nội dung ('' = không in).
@@ -186,6 +187,15 @@ function rhm_get_footer_clinic_info(): array {
 			'icon'  => 'document',
 			'label' => __( 'MST:', 'themeranghammatsgcantho' ),
 			'text'  => $tax_code,
+		);
+	}
+
+	$license = trim( rhm_get_option( 'rhm_license' ) );
+	if ( '' !== $license ) {
+		$items[] = array(
+			'icon'  => 'document',
+			'label' => __( 'GPHĐ:', 'themeranghammatsgcantho' ),
+			'text'  => $license,
 		);
 	}
 

@@ -81,7 +81,7 @@ function rhm_register_branches(): void {
 }
 add_action( 'init', 'rhm_register_branches' );
 
-/** Field ACF: Địa chỉ, Hotline, URL Google Maps (tiền tố rhm_branch_). */
+/** Field ACF: Địa chỉ, Hotline, Địa chỉ cũ, GPHĐ, Email, Giờ làm việc, URL Google Maps (tiền tố rhm_branch_). */
 function rhm_branch_acf(): void {
 	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
 		return;
@@ -117,6 +117,14 @@ function rhm_branch_acf(): void {
 					'instructions' => __( 'Địa chỉ trước khi sáp nhập phường/quận. Footer hiện "(Đ/c cũ: …)" dưới địa chỉ.', 'themeranghammatsgcantho' ),
 				),
 				array(
+					'key'          => 'field_rhm_branch_license',
+					'name'         => 'rhm_branch_license',
+					'label'        => __( 'GPHĐ (giấy phép hoạt động)', 'themeranghammatsgcantho' ),
+					'type'         => 'text',
+					'placeholder'  => __( 'Số …/BYT-GPHĐ, cấp ngày …', 'themeranghammatsgcantho' ),
+					'instructions' => __( 'Số giấy phép hoạt động khám, chữa bệnh của chi nhánh, nhập như muốn hiển thị. Footer hiện "GPHĐ: …" trong khối chi nhánh được ghim; để trống thì không hiện.', 'themeranghammatsgcantho' ),
+				),
+				array(
 					'key'         => 'field_rhm_branch_email',
 					'name'        => 'rhm_branch_email',
 					'label'       => __( 'Email', 'themeranghammatsgcantho' ),
@@ -149,7 +157,7 @@ function rhm_branch_acf(): void {
 }
 add_action( 'acf/init', 'rhm_branch_acf' );
 
-/** Giá trị field chi nhánh ('address' | 'old_address' | 'hotline' | 'email' | 'hours' | 'map_url'); không có ACF thì đọc post meta. */
+/** Giá trị field chi nhánh ('address' | 'old_address' | 'license' | 'hotline' | 'email' | 'hours' | 'map_url'); không có ACF thì đọc post meta. */
 function rhm_get_branch_field( string $name, int $post_id ): string {
 	$value = function_exists( 'get_field' ) ? get_field( 'rhm_branch_' . $name, $post_id ) : get_post_meta( $post_id, 'rhm_branch_' . $name, true );
 	return is_scalar( $value ) ? (string) $value : '';
@@ -159,7 +167,7 @@ function rhm_get_branch_field( string $name, int $post_id ): string {
  * Chi nhánh đã xuất bản, theo tên (A → Z).
  *
  * @param array{term?:string} $args term: slug danh mục để lọc (gồm cả danh mục con).
- * @return array<int, array{id:int, name:string, address:string, old_address:string, hotline:string, email:string, hours:string, map_url:string, image:int, terms:string[]}>
+ * @return array<int, array{id:int, name:string, address:string, old_address:string, license:string, hotline:string, email:string, hours:string, map_url:string, image:int, terms:string[]}>
  *         chuỗi đã làm sạch (address, hours có thể nhiều dòng; hotline có thể nhiều số → rhm_split_phones()), chưa escape; image = ID ảnh đại diện (0 nếu không có — khi in vẫn kiểm tra
  *         wp_attachment_is_image() vì cache có thể giữ ID ảnh vừa bị xóa khỏi Thư viện); terms = tên danh mục.
  */
@@ -167,8 +175,8 @@ function rhm_get_branches( array $args = array() ): array {
 	static $cache = array();
 
 	$term = sanitize_title( (string) ( $args['term'] ?? '' ) );
-	// v3: thêm old_address, email, hours — đổi tiền tố khi đổi cấu trúc mảng để bỏ transient cũ ngay.
-	$key  = 'rhm_branches_v3_' . (int) get_option( 'rhm_branches_cache_version', 1 ) . '_' . md5( $term );
+	// v4: thêm license (GPHĐ); v3: thêm old_address, email, hours — đổi tiền tố khi đổi cấu trúc mảng để bỏ transient cũ ngay.
+	$key  = 'rhm_branches_v4_' . (int) get_option( 'rhm_branches_cache_version', 1 ) . '_' . md5( $term );
 	if ( isset( $cache[ $key ] ) ) {
 		return $cache[ $key ];
 	}
@@ -205,6 +213,7 @@ function rhm_get_branches( array $args = array() ): array {
 			'name'        => trim( get_the_title( $post ) ),
 			'address'     => trim( sanitize_textarea_field( rhm_get_branch_field( 'address', $post->ID ) ) ),
 			'old_address' => trim( sanitize_text_field( rhm_get_branch_field( 'old_address', $post->ID ) ) ),
+			'license'     => trim( sanitize_text_field( rhm_get_branch_field( 'license', $post->ID ) ) ),
 			'hotline'     => trim( sanitize_text_field( rhm_get_branch_field( 'hotline', $post->ID ) ) ),
 			'email'       => sanitize_email( rhm_get_branch_field( 'email', $post->ID ) ),
 			'hours'       => trim( sanitize_textarea_field( rhm_get_branch_field( 'hours', $post->ID ) ) ),

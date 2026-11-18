@@ -15,17 +15,42 @@
 @source "../../../inc/template-tags.php";
 
 @layer components {
-	/* Nền ô bản đồ trước khi tải (lưới mờ gợi hình bản đồ). */
-	.map-facade {
-		@apply bg-soft;
-		background-image:
-			linear-gradient(var(--color-mint-dark) 1px, transparent 1px),
-			linear-gradient(90deg, var(--color-mint-dark) 1px, transparent 1px);
-		background-size: 40px 40px;
+	/* Banner trang Liên hệ: mint → trắng ngà → xanh nõn chuối nhạt, thêm 2 quầng màu mờ (không dùng filter blur → nhẹ khi vẽ). */
+	.contact-hero {
+		background:
+			radial-gradient(circle at 14% 22%, rgb(148 200 61 / 0.2), transparent 42%),
+			radial-gradient(circle at 86% 78%, rgb(0 156 74 / 0.12), transparent 46%),
+			linear-gradient(160deg, var(--color-mint) 0%, #f4fbf6 55%, var(--color-secondary-soft) 100%);
 	}
 
-	/* Iframe bản đồ do src/js/embed.js tạo khi bấm. */
-	.embed-player {
-		@apply absolute inset-0 size-full border-0;
+	/* Mảng chấm trang trí. */
+	.contact-hero__dots {
+		background-image: radial-gradient(var(--color-brand) 1.5px, transparent 1.75px);
+		background-size: 14px 14px;
+		opacity: 0.22;
 	}
+}
+
+/*
+ * Form trong thẻ "Đăng ký tư vấn" (tpl-lien-he.php, .contact-form): thẻ nền canvas-alt → ô nhập nền trắng cho nổi;
+ * nút gửi rộng hết thẻ, bo 8px (thiết kế 2026-11-18). Chỉ trang Liên hệ — popup + hồ sơ bác sĩ giữ style chung (_booking-form.css).
+ * Viết NGOÀI @layer + selector mạnh hơn rule nút của _booking-form.css / <style> nội tuyến của Fluent.
+ */
+.contact-form.rhm-booking .ff-el-form-control {
+	background-color: #fff;
+}
+
+.contact-form.rhm-booking .fluentform .ff-btn-submit:not(.ff_btn_no_style) {
+	width: 100%;
+	border-radius: 0.5rem;
+	background-color: var(--color-primary);
+}
+
+.contact-form.rhm-booking .fluentform .ff-btn-submit:not(.ff_btn_no_style):hover,
+.contact-form.rhm-booking .fluentform .ff-btn-submit:not(.ff_btn_no_style):focus-visible {
+	background-color: var(--color-primary-dark);
+}
+
+.contact-form.rhm-booking .ff-el-group:last-child {
+	margin-bottom: 0;
 }

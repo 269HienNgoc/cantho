@@ -3,13 +3,14 @@
  * Footer. Dữ liệu: inc/footer.php (Customizer → "Chân trang (Footer)" + "Thông tin phòng khám"). Style: utility trong file này + src/css/pages/footer.css.
  *
  * Bố cục (2026-11-17):
- * 1. Thương hiệu: logo + tiêu đề + khẩu hiệu + địa chỉ, MST ("Thông tin phòng khám"; icon cột trái, chữ cột phải).
- * 2. Cột linh động (rhm_footer_middle()): menu Điều khoản chính sách HOẶC Hệ thống chi nhánh.
- * 3. Kết nối với chúng tôi: hotline, email, giờ làm việc + mạng xã hội.
- * - < 640px: 1 cột, thứ tự hiển thị 1 → 3 → 2 (cột giữa max-sm:order-last: "Kết nối với chúng tôi" lên trên Điều khoản chính sách). 640px: cột 1 rộng hết hàng, cột 2 | cột 3. 1024px: 3 cột có vạch ngăn;
+ * 1. Thương hiệu: logo + tiêu đề + khẩu hiệu + địa chỉ, MST, GPHĐ ("Thông tin phòng khám"; icon cột trái, chữ cột phải).
+ * 2. Kết nối với chúng tôi: hotline, email, giờ làm việc + mạng xã hội.
+ * 3. Cột linh động (rhm_footer_middle()): menu Điều khoản chính sách HOẶC Hệ thống chi nhánh — đứng SAU "Kết nối với chúng tôi"
+ *    ở mọi màn hình (người dùng yêu cầu 2026-11-17; tên biến/hàm "middle" giữ nguyên).
+ * - < 640px: 1 cột theo đúng thứ tự DOM 1 → 2 → 3. 640px: cột 1 rộng hết hàng, cột 2 | cột 3. 1024px: 3 cột có vạch ngăn;
  *   tỉ lệ cột theo nội dung cột giữa (chi nhánh cần rộng hơn menu).
  * - Vùng riêng dưới lưới 3 cột (viền trên): (tiêu đề khối H2) + tối đa 2 chi nhánh được "Ghim": viên tên (H3), địa chỉ
- *   (+ đ/c cũ, Xem bản đồ), các số điện thoại (mỗi số 1 link tel:), email, giờ làm việc. Từ 640px 2 chi nhánh cạnh nhau.
+ *   (+ đ/c cũ, Xem bản đồ), GPHĐ, các số điện thoại (mỗi số 1 link tel:), email, giờ làm việc. Từ 640px 2 chi nhánh cạnh nhau.
  * - Hàng cuối: bản quyền + (khi cột giữa là chi nhánh) menu chính sách dạng dòng + huy hiệu.
  * Cột / khối nào không có dữ liệu thì không in.
  *
@@ -41,10 +42,11 @@ $rhm_policy_args  = array(
 	'depth'                => 1,
 );
 
-// Tỉ lệ cột từ 1024px (viết nguyên văn để Tailwind quét được).
+// Tỉ lệ cột từ 1024px (viết nguyên văn để Tailwind quét được). Cột 2 = Kết nối (đệm 2 bên): ≥ 1280px đủ ~450px để email
+// 16px nằm 1 dòng (hẹp hơn thì xuống dòng sau @, rhm_get_footer_contacts()). Cột 3 = chính sách / chi nhánh (chi nhánh cần rộng hơn).
 $rhm_grid = 'branches' === $rhm_middle
-	? 'lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1.35fr)_minmax(0,1fr)]'
-	: 'lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)]';
+	? 'lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.3fr)]'
+	: 'lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.25fr)_minmax(0,1fr)]';
 ?>
 </main>
 
@@ -103,33 +105,8 @@ $rhm_grid = 'branches' === $rhm_middle
 			<?php endif; ?>
 		</div>
 
-		<?php if ( 'policy' === $rhm_middle ) : ?>
-			<div class="max-sm:order-last lg:border-l lg:border-white/10 lg:px-8 xl:px-12">
-				<h2 class="footer-heading"><?php echo esc_html( rhm_footer_text( 'policy_title' ) ); ?></h2>
-				<?php wp_nav_menu( $rhm_policy_args + array( 'menu_class' => 'footer-nav' ) ); ?>
-			</div>
-		<?php elseif ( 'branches' === $rhm_middle ) : ?>
-			<div class="max-sm:order-last lg:border-l lg:border-white/10 lg:px-8 xl:px-12">
-				<h2 class="footer-heading"><?php echo esc_html( rhm_footer_text( 'branch_title' ) ); ?></h2>
-				<ul class="grid grid-cols-[repeat(auto-fill,minmax(min(18rem,100%),1fr))] gap-x-6 gap-y-3">
-					<?php foreach ( $rhm_branches as $rhm_branch ) : ?>
-						<li class="flex items-start gap-2.5">
-							<?php echo rhm_get_icon( 'map-pin', 'mt-0.5 size-4 shrink-0 text-footer-accent' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-							<span><?php echo nl2br( esc_html( $rhm_branch['address'] ) ); // Chỉ địa chỉ của chi nhánh được chọn trong Tùy biến (rhm_get_footer_branches). ?></span>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-				<?php if ( $rhm_branch_text ) : ?>
-					<a class="mt-6 inline-flex h-11 items-center gap-2.5 rounded-full border border-white/25 px-6 text-base font-medium whitespace-nowrap text-white transition-colors hover:border-primary-light hover:bg-primary hover:text-white" href="<?php echo esc_url( $rhm_branch_link ); ?>">
-						<?php echo esc_html( $rhm_branch_text ); ?>
-						<?php echo rhm_get_icon( 'arrow-right', 'size-4' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
-					</a>
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
-
 		<?php if ( $rhm_contacts || $rhm_socials ) : ?>
-			<div class="lg:border-l lg:border-white/10 lg:pl-8 xl:pl-12">
+			<div class="lg:border-l lg:border-white/10 lg:px-8 xl:px-12">
 				<h2 class="footer-heading"><?php echo esc_html( rhm_footer_text( 'social_title' ) ); ?></h2>
 				<?php if ( $rhm_contacts ) : ?>
 					<ul class="space-y-4">
@@ -156,6 +133,31 @@ $rhm_grid = 'branches' === $rhm_middle
 							</li>
 						<?php endforeach; ?>
 					</ul>
+				<?php endif; ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( 'policy' === $rhm_middle ) : ?>
+			<div class="lg:border-l lg:border-white/10 lg:pl-8 xl:pl-12">
+				<h2 class="footer-heading"><?php echo esc_html( rhm_footer_text( 'policy_title' ) ); ?></h2>
+				<?php wp_nav_menu( $rhm_policy_args + array( 'menu_class' => 'footer-nav' ) ); ?>
+			</div>
+		<?php elseif ( 'branches' === $rhm_middle ) : ?>
+			<div class="lg:border-l lg:border-white/10 lg:pl-8 xl:pl-12">
+				<h2 class="footer-heading"><?php echo esc_html( rhm_footer_text( 'branch_title' ) ); ?></h2>
+				<ul class="grid grid-cols-[repeat(auto-fill,minmax(min(18rem,100%),1fr))] gap-x-6 gap-y-3">
+					<?php foreach ( $rhm_branches as $rhm_branch ) : ?>
+						<li class="flex items-start gap-2.5">
+							<?php echo rhm_get_icon( 'map-pin', 'mt-0.5 size-4 shrink-0 text-footer-accent' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+							<span><?php echo nl2br( esc_html( $rhm_branch['address'] ) ); // Chỉ địa chỉ của chi nhánh được chọn trong Tùy biến (rhm_get_footer_branches). ?></span>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+				<?php if ( $rhm_branch_text ) : ?>
+					<a class="mt-6 inline-flex h-11 items-center gap-2.5 rounded-full border border-white/25 px-6 text-base font-medium whitespace-nowrap text-white transition-colors hover:border-primary-light hover:bg-primary hover:text-white" href="<?php echo esc_url( $rhm_branch_link ); ?>">
+						<?php echo esc_html( $rhm_branch_text ); ?>
+						<?php echo rhm_get_icon( 'arrow-right', 'size-4' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+					</a>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
@@ -202,6 +204,11 @@ $rhm_grid = 'branches' === $rhm_middle
 										</a>
 									<?php endif; ?>
 								</div>
+
+								<?php if ( $rhm_branch['license'] ) : ?>
+									<?php echo rhm_get_icon( 'document', 'mt-1 size-[18px] text-footer-accent' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
+									<p><span class="font-medium text-white"><?php esc_html_e( 'GPHĐ:', 'themeranghammatsgcantho' ); ?></span> <?php echo esc_html( $rhm_branch['license'] ); ?></p>
+								<?php endif; ?>
 
 								<?php if ( $rhm_phones ) : ?>
 									<?php echo rhm_get_icon( 'phone', 'mt-1 size-[18px] text-footer-accent' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG. ?>
